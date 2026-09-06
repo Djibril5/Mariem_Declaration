@@ -1943,7 +1943,7 @@
     // Surprise ou nouvelle du jour
     // Modifie librement ce tableau : chaque jour de l'année tombe sur UN
     // seul élément (surprise ou nouvelle), toujours le même tant que la
-    // date ne change pas.
+    // date ne change pas.merci
     const quotidienStage = document.getElementById("quotidienStage");
     const quotidienReveal = document.getElementById("quotidienReveal");
     const quotidienBox = document.getElementById("quotidienBox");
@@ -1952,7 +1952,7 @@
     const quotidienText = document.getElementById("quotidienText");
     const quotidienAgain = document.getElementById("quotidienAgain");
 
-    const elementsDuJour = [
+   /* const elementsDuJour = [
       { type: "surprise", texte: "Aujourd'hui encore, tu occupes toutes mes pensées, mon chaton." },
       { type: "nouvelle", texte: "J'ai pensé à toi en écrivant cette page, et ça m'a fait sourire." },
       { type: "surprise", texte: "Où que tu sois aujourd'hui, j'espère que ta journée te ressemble : belle." },
@@ -1967,7 +1967,7 @@
       { type: "nouvelle", texte: "Petite nouvelle du jour : tu me manques un peu plus que d'habitude." },
       { type: "surprise", texte: "Si je pouvais t'offrir une chose aujourd'hui, ce serait ton sourire préféré." },
       { type: "nouvelle", texte: "J'ai encore souri en repensant à un de nos souvenirs aujourd'hui." }
-    ];
+    ];*/
 
     const jourDeLannee = Math.floor(
       (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
