@@ -487,7 +487,12 @@
     }
 
     #openLetter {
-      margin-top: 25px;
+      display: block;
+      width: fit-content;
+      margin: 25px auto 0;
+      padding: 11px 16px;
+      font-size: .6rem;
+      letter-spacing: 1px;
     }
 
     /* Puzzle */
@@ -1152,6 +1157,179 @@
         font-size: 1.25rem;
       }
     }
+
+    /* Surprise ou nouvelle du jour */
+    #quotidien {
+      display: flex;
+      align-items: center;
+      background:
+        radial-gradient(circle at 85% 15%, rgba(255,184,107,.18), transparent 30%),
+        radial-gradient(circle at 15% 85%, rgba(255,92,138,.14), transparent 28%),
+        linear-gradient(135deg, #fffaf5, #fff0f6 55%, #f6f0ff);
+    }
+
+    .quotidien-stage {
+      position: relative;
+      width: min(820px, 100%);
+      min-height: 440px;
+      margin: 60px auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .quotidien-reveal {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: clamp(38px, 7vw, 60px) clamp(45px, 9vw, 85px);
+      border-radius: 32px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff5c8a 0%, #c45ce8 55%, #8b5cf6 100%);
+      box-shadow: 0 25px 65px rgba(139,92,246,.30);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      animation: revealGlow 2.2s ease-in-out infinite;
+      transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease;
+    }
+
+    .quotidien-reveal:hover {
+      transform: translateY(-6px) scale(1.03);
+    }
+
+    .quotidien-reveal:active {
+      transform: scale(.96);
+    }
+
+    .quotidien-reveal-icon {
+      font-size: 2.4rem;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .quotidien-reveal.is-hidden {
+      opacity: 0;
+      transform: scale(.7);
+      pointer-events: none;
+      position: absolute;
+    }
+
+    @keyframes revealGlow {
+      0%, 100% { box-shadow: 0 25px 65px rgba(139,92,246,.30); }
+      50% { box-shadow: 0 30px 85px rgba(255,92,138,.45); }
+    }
+
+    .quotidien-box {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 700px;
+      padding: clamp(38px, 7vw, 65px);
+      text-align: center;
+      border-radius: 30px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,92,138,.22);
+      box-shadow: 0 30px 80px rgba(92,47,76,.18);
+      opacity: 0;
+      transform: scale(.4) rotate(-6deg);
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .quotidien-box.show {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      pointer-events: auto;
+      position: relative;
+      animation: spectacularReveal .8s cubic-bezier(.2,1.4,.4,1) both;
+    }
+
+    @keyframes spectacularReveal {
+      0% {
+        opacity: 0;
+        transform: scale(.3) rotate(-10deg);
+      }
+      55% {
+        opacity: 1;
+        transform: scale(1.08) rotate(2deg);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    .quotidien-tag {
+      display: inline-block;
+      padding: 7px 16px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: #fff;
+      font-size: .62rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .quotidien-date {
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: .74rem;
+      letter-spacing: 1px;
+      text-transform: capitalize;
+    }
+
+    .quotidien-text {
+      color: var(--text);
+      font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .quotidien-again {
+      margin-top: 26px;
+    }
+
+    .quotidien-spark {
+      position: absolute;
+      z-index: 3;
+      pointer-events: none;
+      font-size: 1.4rem;
+      opacity: 0;
+      animation: sparkFloat 1.6s ease-out forwards;
+    }
+
+    @keyframes sparkFloat {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(.5) rotate(0deg);
+      }
+      15% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-160px) scale(1.2) rotate(25deg);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .quotidien-stage {
+        min-height: 380px;
+      }
+
+      .quotidien-reveal {
+        padding: 30px 30px;
+      }
+    }
   </style>
 </head>
 
@@ -1202,6 +1380,10 @@
 
             <a href="#surprises" class="button">
               Voir les surprises
+            </a>
+
+            <a href="#quotidien" class="button">
+              Nouvelle du jour
             </a>
           </div>
         </div>
@@ -1395,6 +1577,39 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- SURPRISE OU NOUVELLE DU JOUR -->
+    <section id="quotidien">
+      <div class="section-content">
+
+        <div class="heading">
+          <div class="eyebrow">Chaque jour compte</div>
+          <h2>La surprise du jour</h2>
+          <p>
+            Une seule chose t'attend ici aujourd'hui : une surprise, ou une
+            petite nouvelle. Clique pour la découvrir.
+          </p>
+        </div>
+
+        <div class="quotidien-stage" id="quotidienStage">
+
+          <button class="quotidien-reveal" id="quotidienReveal">
+            <span class="quotidien-reveal-icon">✦</span>
+            <span>Découvrir la nouvelle du jour</span>
+          </button>
+
+          <div class="quotidien-box" id="quotidienBox">
+            <span class="quotidien-tag" id="quotidienTag"></span>
+            <div class="quotidien-date" id="quotidienDate"></div>
+            <div class="quotidien-text" id="quotidienText"></div>
+            <button class="button quotidien-again" id="quotidienAgain">
+              Revoir la révélation
+            </button>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -1723,6 +1938,83 @@
         finalModal.classList.remove("show");
         document.body.classList.remove("modal-open");
       }
+    });
+
+    // Surprise ou nouvelle du jour
+    // Modifie librement ce tableau : chaque jour de l'année tombe sur UN
+    // seul élément (surprise ou nouvelle), toujours le même tant que la
+    // date ne change pas.
+    const quotidienStage = document.getElementById("quotidienStage");
+    const quotidienReveal = document.getElementById("quotidienReveal");
+    const quotidienBox = document.getElementById("quotidienBox");
+    const quotidienTag = document.getElementById("quotidienTag");
+    const quotidienDate = document.getElementById("quotidienDate");
+    const quotidienText = document.getElementById("quotidienText");
+    const quotidienAgain = document.getElementById("quotidienAgain");
+
+    const elementsDuJour = [
+      { type: "surprise", texte: "Aujourd'hui encore, tu occupes toutes mes pensées, mon chaton." },
+      { type: "nouvelle", texte: "J'ai pensé à toi en écrivant cette page, et ça m'a fait sourire." },
+      { type: "surprise", texte: "Où que tu sois aujourd'hui, j'espère que ta journée te ressemble : belle." },
+      { type: "nouvelle", texte: "J'ai encore repensé à nos souvenirs de Kaffrine, ils me font toujours autant sourire." },
+      { type: "surprise", texte: "Un petit rappel du jour : tu comptes énormément pour moi." },
+      { type: "nouvelle", texte: "J'ai hâte de construire encore plus de beaux moments avec toi." },
+      { type: "surprise", texte: "Aujourd'hui, je pense à ton sourire et ça me suffit pour être heureux." },
+      { type: "surprise", texte: "Petite pensée du jour envoyée avec tout mon cœur, Marem." },
+      { type: "nouvelle", texte: "Encore une journée où j'ai eu de la chance de t'avoir dans ma vie." },
+      { type: "surprise", texte: "Aujourd'hui, comme tous les jours, je tiens à toi." },
+      { type: "surprise", texte: "Une nouvelle journée, la même envie : prendre soin de toi." },
+      { type: "nouvelle", texte: "Petite nouvelle du jour : tu me manques un peu plus que d'habitude." },
+      { type: "surprise", texte: "Si je pouvais t'offrir une chose aujourd'hui, ce serait ton sourire préféré." },
+      { type: "nouvelle", texte: "J'ai encore souri en repensant à un de nos souvenirs aujourd'hui." }
+    ];
+
+    const jourDeLannee = Math.floor(
+      (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
+    );
+
+    const elementDuJour = elementsDuJour[jourDeLannee % elementsDuJour.length];
+
+    function formatDateDuJour() {
+      const options = { weekday: "long", day: "numeric", month: "long" };
+      return new Date().toLocaleDateString("fr-FR", options);
+    }
+
+    function creerEtincelles() {
+      const symboles = ["✦", "♥", "✧", "💫"];
+
+      for (let i = 0; i < 12; i++) {
+        const spark = document.createElement("span");
+        spark.className = "quotidien-spark";
+        spark.textContent = symboles[Math.floor(Math.random() * symboles.length)];
+        spark.style.left = Math.random() * 100 + "%";
+        spark.style.bottom = "10%";
+        spark.style.animationDelay = Math.random() * 0.3 + "s";
+        spark.style.color = Math.random() > .5 ? "var(--primary)" : "#8b5cf6";
+        quotidienStage.appendChild(spark);
+
+        setTimeout(() => spark.remove(), 2000);
+      }
+    }
+
+    function reveler() {
+      quotidienTag.textContent =
+        elementDuJour.type === "surprise" ? "Surprise du jour" : "Nouvelle du jour";
+      quotidienDate.textContent = formatDateDuJour();
+      quotidienText.textContent = elementDuJour.texte;
+
+      quotidienReveal.classList.add("is-hidden");
+      quotidienBox.classList.add("show");
+      creerEtincelles();
+    }
+
+    quotidienReveal.addEventListener("click", reveler);
+
+    quotidienAgain.addEventListener("click", () => {
+      quotidienBox.classList.remove("show");
+      setTimeout(() => {
+        quotidienReveal.classList.remove("is-hidden");
+      }, 300);
     });
 
     // Mélange automatique dès l'ouverture de la page
