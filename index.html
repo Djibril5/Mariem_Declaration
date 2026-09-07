@@ -21,6 +21,12 @@
       --line: rgba(37,29,43,.10);
       --shadow: 0 24px 70px rgba(92, 47, 76, .14);
       --transition: .35s cubic-bezier(.2,.8,.2,1);
+      /* variables manquantes dans l'original : réparées en réutilisant
+         les couleurs déjà présentes dans la palette, sans rien ajouter de nouveau */
+      --gold: var(--accent);
+      --pink: var(--primary);
+      --night: #171126;
+      --night-light: linear-gradient(135deg, #fffaf7 0%, #fff0f5 55%, #f5efff 100%);
     }
 
     * {
@@ -35,6 +41,7 @@
       color: var(--text);
       font-family: Inter, "Segoe UI", Arial, sans-serif;
       background: var(--bg);
+      cursor: default;
     }
 
     body.modal-open {
@@ -293,6 +300,7 @@
       background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,240,246,.78));
       box-shadow: var(--shadow); border-radius: 28px;
       animation: floating 5s ease-in-out infinite;
+      cursor: pointer;
     }
 
     .moon {
@@ -304,6 +312,11 @@
       box-shadow:
         0 0 35px rgba(255,210,110,.65),
         0 0 100px rgba(139,92,246,.28);
+      transition: transform .4s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .moon-card:hover .moon {
+      transform: scale(1.04);
     }
 
     .moon::before,
@@ -566,6 +579,7 @@
       padding: 20px;
       background: rgba(255,255,255,.78);
       backdrop-filter: blur(15px);
+      overflow: hidden;
     }
 
     .modal.show {
@@ -634,6 +648,21 @@
     .modal-box button {
       position: relative;
       z-index: 1;
+    }
+
+    .modal-confetti {
+      position: fixed;
+      z-index: 3001;
+      top: -30px;
+      pointer-events: none;
+      animation-name: confettiTombe;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      font-size: 1.3rem;
+    }
+
+    @keyframes confettiTombe {
+      to { transform: translateY(110vh) translateX(var(--derive, 0px)) rotate(var(--tour, 240deg)); opacity: 0; }
     }
 
     footer {
@@ -1045,6 +1074,130 @@
       line-height: 1.5;
     }
 
+    /* Cadeau surprise */
+    .gift-wrap {
+      width: min(760px, 100%);
+      margin: 65px auto 0;
+      text-align: center;
+    }
+
+    .gift-box {
+      position: relative;
+      width: 150px;
+      height: 130px;
+      margin: 0 auto 22px;
+      cursor: pointer;
+      transform-origin: bottom center;
+    }
+
+    .gift-box.secoue {
+      animation: secousse .5s ease-in-out infinite;
+    }
+
+    @keyframes secousse {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-4deg); }
+      75% { transform: rotate(4deg); }
+    }
+
+    .gift-base {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 130px;
+      height: 90px;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      box-shadow: 0 18px 40px rgba(139,92,246,.25);
+      transition: transform .4s cubic-bezier(.2,1.4,.4,1), opacity .4s ease;
+    }
+
+    .gift-lid {
+      position: absolute;
+      left: 50%;
+      bottom: 84px;
+      width: 146px;
+      height: 34px;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      border-radius: 8px;
+      box-shadow: 0 10px 22px rgba(139,92,246,.25);
+      transition: transform .5s cubic-bezier(.2,1.4,.4,1), opacity .5s ease;
+    }
+
+    .gift-ribbon-v {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 18px;
+      height: 90px;
+      transform: translateX(-50%);
+      background: var(--accent);
+    }
+
+    .gift-ribbon-h {
+      position: absolute;
+      left: 50%;
+      bottom: 84px;
+      width: 20px;
+      height: 34px;
+      transform: translateX(-50%);
+      background: var(--accent);
+    }
+
+    .gift-box.ouvert .gift-lid {
+      transform: translate(calc(-50% - 60px), -70px) rotate(-35deg);
+      opacity: 0;
+    }
+
+    .gift-box.ouvert .gift-base {
+      transform: translateX(-50%) scale(.9);
+      opacity: .3;
+    }
+
+    .gift-message {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 22px 26px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.7;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(-12px) scale(.9);
+      transition: .5s cubic-bezier(.2,1.4,.4,1);
+      pointer-events: none;
+    }
+
+    .gift-message.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .gift-hint {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .confetti-cadeau {
+      position: fixed;
+      z-index: 40;
+      top: 0;
+      pointer-events: none;
+      font-size: 1.2rem;
+      animation-name: confettiTombe;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
     @media (max-width: 900px) {
       .reasons-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1330,6 +1483,98 @@
         padding: 30px 30px;
       }
     }
+
+    /* --- Nouveaux tours : traînée de curseur, double-clic, secret --- */
+
+    .coeur-suivi {
+      position: fixed;
+      z-index: 500;
+      pointer-events: none;
+      color: var(--primary);
+      font-size: 14px;
+      opacity: .6;
+      animation: coeurSuiviDisparait 1s ease-out forwards;
+    }
+
+    @keyframes coeurSuiviDisparait {
+      to { opacity: 0; transform: translateY(-26px) scale(.4); }
+    }
+
+    .coeur-double-tap {
+      position: fixed;
+      z-index: 900;
+      pointer-events: none;
+      color: var(--primary);
+      font-size: 64px;
+      transform: translate(-50%, -50%) scale(.4);
+      opacity: 0;
+      animation: doubleTapPop .85s cubic-bezier(.2,1.6,.4,1) forwards;
+      filter: drop-shadow(0 6px 14px rgba(255,92,138,.4));
+    }
+
+    @keyframes doubleTapPop {
+      0% { transform: translate(-50%,-50%) scale(.3); opacity: 0; }
+      35% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+      60% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%,-50%) scale(1.05); opacity: 0; }
+    }
+
+    .secret-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: radial-gradient(circle at 50% 40%, rgba(255,92,138,.35), var(--night) 75%);
+      overflow: hidden;
+    }
+
+    .secret-overlay.show {
+      display: grid;
+      animation: fadeIn .5s ease both;
+    }
+
+    .secret-overlay-box {
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+      padding: clamp(35px, 7vw, 60px);
+      text-align: center;
+      border-radius: 28px;
+      background: rgba(23,17,38,.55);
+      border: 1px solid rgba(255,184,107,.4);
+      color: #fff;
+      animation: modalIn .7s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .secret-overlay-box .modal-symbol {
+      color: var(--accent);
+    }
+
+    .secret-overlay-box h2 {
+      color: #fff;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+    }
+
+    .secret-overlay-box p {
+      margin: 18px 0 28px;
+      font-size: 1rem;
+      line-height: 1.8;
+      opacity: .92;
+    }
+
+    .secret-coeur {
+      position: fixed;
+      z-index: 4999;
+      top: -30px;
+      pointer-events: none;
+      color: var(--accent);
+      font-size: 1.3rem;
+      animation-name: confettiTombe;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
   </style>
 </head>
 
@@ -1368,9 +1613,9 @@
           </h1>
 
           <p class="hero-description">
-            Mariam, cette page est une petite parenthèse créée pour toi.
-            Un endroit où chaque mot, chaque détail et chaque surprise raconte
-            une partie de ce que je ressens.
+            Mariam, cette page est une petite parenthèse que j'ai voulue pour toi :
+            un endroit où chaque mot, chaque détail et chaque surprise racontent
+            un peu de ce que tu représentes pour moi.
           </p>
 
           <div class="hero-actions">
@@ -1388,7 +1633,7 @@
           </div>
         </div>
 
-        <div class="moon-card">
+        <div class="moon-card" id="moonCard" title="psst, clique-moi">
           <div class="moon"></div>
           <div class="moon-text">Mon chaton · Mon bonheur</div>
         </div>
@@ -1402,7 +1647,7 @@
           <div class="eyebrow">Quelques mots cachés</div>
           <h2>Pour mon chaton</h2>
           <p>
-            Derrière chaque carte se trouve une pensée que je garde pour toi.
+            Derrière chaque carte se cache une pensée que je garde pour toi.
           </p>
         </div>
 
@@ -1417,7 +1662,7 @@
               </div>
 
               <div class="card-face card-back">
-                <p>Ton sourire change complètement l’ambiance de mes journées.</p>
+                <p>Ton sourire suffit à changer complètement l'ambiance de mes journées.</p>
               </div>
             </div>
           </article>
@@ -1431,7 +1676,7 @@
               </div>
 
               <div class="card-face card-back">
-                <p>Tu es mon chaton, ma douceur et mon endroit préféré.</p>
+                <p>Tu es mon chaton, ma douceur, et mon endroit préféré au monde.</p>
               </div>
             </div>
           </article>
@@ -1440,12 +1685,12 @@
             <div class="card-inner">
               <div class="card-face card-front">
                 <div class="card-number">03</div>
-                <h3>Ce que j’aime</h3>
+                <h3>Ce que j'aime</h3>
                 <small>Cliquer pour révéler</small>
               </div>
 
               <div class="card-face card-back">
-                <p>J’aime ta façon d’être, ta sensibilité et ta lumière.</p>
+                <p>J'aime ta façon d'être, ta sensibilité, et cette lumière que tu gardes même les jours gris.</p>
               </div>
             </div>
           </article>
@@ -1459,7 +1704,7 @@
               </div>
 
               <div class="card-face card-back">
-                <p>Je prendrai toujours soin de ton cœur avec tendresse.</p>
+                <p>Je prendrai toujours soin de ton cœur, avec toute la tendresse que tu mérites.</p>
               </div>
             </div>
           </article>
@@ -1478,7 +1723,7 @@
           <h2>Quelques petites attentions pour toi</h2>
           <p>
             J'ai ajouté quelques petits détails juste pour te faire sourire,
-            parce que les plus belles choses sont parfois les plus simples.
+            parce que les plus belles choses sont souvent les plus simples.
           </p>
         </div>
 
@@ -1486,7 +1731,7 @@
           <article class="reason-card">
             <div class="reason-number">01</div>
             <h3>Ton sourire</h3>
-            <p>Il suffit parfois d'un seul sourire de toi pour rendre une journée beaucoup plus belle.</p>
+            <p>Il suffit d'un seul de tes sourires pour rendre une journée entière plus belle.</p>
           </article>
 
           <article class="reason-card">
@@ -1498,19 +1743,19 @@
           <article class="reason-card">
             <div class="reason-number">03</div>
             <h3>Ta présence</h3>
-            <p>Même quand nous ne faisons rien de spécial, être avec toi reste un moment précieux.</p>
+            <p>Même quand on ne fait rien de spécial, être avec toi reste un moment précieux.</p>
           </article>
 
           <article class="reason-card">
             <div class="reason-number">04</div>
             <h3>Ta personnalité</h3>
-            <p>Tu as cette façon bien à toi de rendre les moments ordinaires un peu plus spéciaux.</p>
+            <p>Tu as cette façon bien à toi de rendre les moments les plus ordinaires un peu plus spéciaux.</p>
           </article>
 
           <article class="reason-card">
             <div class="reason-number">05</div>
             <h3>Ta confiance</h3>
-            <p>Merci pour les conversations, les confidences et tous ces petits moments partagés.</p>
+            <p>Merci pour les conversations, les confidences, et tous ces petits moments partagés.</p>
           </article>
 
           <article class="reason-card">
@@ -1553,13 +1798,28 @@
           </div>
         </div>
 
+        <!-- Nouveau : un petit cadeau à ouvrir -->
+        <div class="gift-wrap">
+          <div class="eyebrow">Un petit cadeau</div>
+          <div class="gift-box" id="giftBox">
+            <div class="gift-base"></div>
+            <div class="gift-ribbon-v"></div>
+            <div class="gift-lid"></div>
+            <div class="gift-ribbon-h"></div>
+          </div>
+          <div class="gift-message" id="giftMessage">
+            Le vrai cadeau, c'est de t'avoir dans ma vie, mon chaton. Tout le reste n'est que du bonus. ♥
+          </div>
+          <p class="gift-hint" id="giftHint">clique sur la boîte</p>
+        </div>
+
         <div class="promise-box">
           <div class="mini-heart">♥</div>
           <h3>Une petite promesse</h3>
           <p>
             Je ne te promets pas que chaque journée sera parfaite.
-            Je te promets simplement de continuer à apprécier les petits moments,
-            de te faire sourire quand je le peux et de prendre soin de ce lien
+            Je te promets simplement de continuer à chérir les petits moments,
+            de te faire sourire quand je le peux, et de prendre soin de ce lien
             qui nous unit.
           </p>
         </div>
@@ -1571,7 +1831,7 @@
               Si tu es arrivée jusqu'ici, alors sache une chose :
               cette page n'est pas seulement une page web.
               C'est une petite collection de pensées que j'ai voulu transformer
-              en souvenir. Et le meilleur détail de toute cette page…
+              en souvenir. Et le plus beau détail de toute cette page…
               <strong>c'est toi.</strong> ♥
             </div>
           </div>
@@ -1625,7 +1885,7 @@
           <div class="letter-content" id="letterContent">
             <p>
               Ma Marem, tu occupes une place particulière dans ma vie,
-              une place que personne ne pourrait remplacer.
+              une place que personne d'autre ne pourrait remplacer.
             </p>
 
             <p>
@@ -1635,12 +1895,12 @@
 
             <p>
               Je veux être là dans tes réussites comme dans tes difficultés,
-              te soutenir, te rassurer et te rappeler chaque jour combien tu es
-              importante pour moi.
+              te soutenir, te rassurer, et te rappeler chaque jour à quel point
+              tu es importante pour moi.
             </p>
 
             <p class="highlight">
-              Je t’aime profondément, mon chaton. Tu es mon bonheur.
+              Je t'aime profondément, mon chaton. Tu es mon bonheur.
             </p>
           </div>
 
@@ -1672,14 +1932,14 @@
             <h3>Des moments fabuleux que je n'oublierai pas</h3>
             <p>
               Je garde une place toute particulière pour nos moments à Kaffrine.
-              Les discussions, les rires, les petits instants simples et tout ce
-              que nous avons partagé là-bas font partie des souvenirs que je
+              Les discussions, les rires, les petits instants simples, tout ce
+              que nous avons partagé là-bas fait partie des souvenirs que je
               veux continuer à chérir.
             </p>
             <p>
-              Et si ces moments ont été aussi beaux, j'espère surtout que ce ne
-              sont que les premières pages d'une histoire qui nous réserve encore
-              beaucoup de beaux souvenirs.
+              Et si ces moments ont été aussi beaux, j'espère surtout qu'ils
+              ne sont que les premières pages d'une histoire qui nous réserve
+              encore beaucoup de beaux souvenirs.
             </p>
           </div>
         </div>
@@ -1690,7 +1950,7 @@
           <p>
             Au-delà des souvenirs que nous avons déjà créés, je souhaite
             construire avec toi un avenir rempli de bonheur, de complicité,
-            de réussite, de paix et de beaux projets.
+            de réussite, de paix, et de beaux projets.
           </p>
           <div class="future-line">
             <span>Nos souvenirs</span>
@@ -1742,12 +2002,25 @@
       <h2>Tu as réussi</h2>
 
       <p>
-        Pas de quoi mon chaton
+        Pas de quoi, mon chaton.
       </p>
 
       <button class="button primary" id="closeModal">
         Garder ce moment
       </button>
+    </div>
+  </div>
+
+  <!-- ECRAN SECRET (mot-clé caché) -->
+  <div class="secret-overlay" id="secretOverlay">
+    <div class="secret-overlay-box">
+      <div class="modal-symbol">✦</div>
+      <h2>Mot secret trouvé</h2>
+      <p>
+        Personne ne t'a dit de chercher ça. Tu l'as juste trouvé.
+        Comme moi, un jour, sans le chercher, je t'ai trouvée toi. ♥
+      </p>
+      <button class="button primary" id="closeSecret">Fermer</button>
     </div>
   </div>
 
@@ -1799,7 +2072,9 @@
       "Tu es mon petit rayon de soleil dans les journées ordinaires.",
       "Même sans le savoir, tu peux rendre quelqu'un heureux simplement en étant toi.",
       "Tu mérites beaucoup de douceur, de respect et de bonheur.",
-      "Si je devais choisir une personne à retrouver encore et encore, ce serait toi. ♥"
+      "Si je devais choisir une personne à retrouver encore et encore, ce serait toi. ♥",
+      "Ta façon de voir la vie donne envie de la voir un peu comme toi.",
+      "Tu rends les silences confortables et les journées plus légères."
     ];
 
     let lastCompliment = -1;
@@ -1819,7 +2094,7 @@
       }, 180);
     });
 
-    // Petit secret
+    // Petit secret (bouton)
     const secretButton = document.getElementById("secretButton");
     const secretNote = document.getElementById("secretNote");
 
@@ -1921,13 +2196,15 @@
         setTimeout(() => {
           finalModal.classList.add("show");
           document.body.classList.add("modal-open");
+          pluieDeConfettis(finalModal);
         }, 1000);
       } else {
         puzzleMessage.textContent =
           "Presque ! Continue à remettre les lettres dans le bon ordre.";
       }
     }
-// Fermeture de la fenêtre finale
+
+    // Fermeture de la fenêtre finale
     closeModal.addEventListener("click", () => {
       finalModal.classList.remove("show");
       document.body.classList.remove("modal-open");
@@ -1940,10 +2217,29 @@
       }
     });
 
+    // Pluie de confettis / cœurs pour la modale finale
+    function pluieDeConfettis() {
+      const symboles = ["♥", "✦", "✧"];
+      const couleurs = ["var(--primary)", "var(--secondary)", "var(--accent)"];
+
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const c = document.createElement("div");
+          c.className = "modal-confetti";
+          c.textContent = symboles[Math.floor(Math.random() * symboles.length)];
+          c.style.left = Math.random() * 100 + "vw";
+          c.style.color = couleurs[Math.floor(Math.random() * couleurs.length)];
+          c.style.setProperty("--derive", (Math.random() * 140 - 70) + "px");
+          c.style.setProperty("--tour", (Math.random() * 360 + 180) + "deg");
+          const duree = 2.4 + Math.random() * 2;
+          c.style.animationDuration = duree + "s";
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), duree * 1000 + 200);
+        }, i * 45);
+      }
+    }
+
     // Surprise ou nouvelle du jour
-    // Modifie librement ce tableau : chaque jour de l'année tombe sur UN
-    // seul élément (surprise ou nouvelle), toujours le même tant que la
-    // date ne change pas.merci
     const quotidienStage = document.getElementById("quotidienStage");
     const quotidienReveal = document.getElementById("quotidienReveal");
     const quotidienBox = document.getElementById("quotidienBox");
@@ -1959,10 +2255,10 @@
       { type: "nouvelle", texte: "J'ai encore repensé à nos souvenirs de Kaffrine, ils me font toujours autant sourire." },
       { type: "surprise", texte: "Un petit rappel du jour : tu comptes énormément pour moi." },
       { type: "nouvelle", texte: "J'ai hâte de construire encore plus de beaux moments avec toi." },
-      { type: "surprise", texte: "Aujourd'hui, je pense à ton sourire et ça me suffit pour être heureux." },
+      { type: "surprise", texte: "Aujourd'hui, je pense à ton sourire, et ça me suffit pour être heureux." },
       { type: "surprise", texte: "Petite pensée du jour envoyée avec tout mon cœur, Marem." },
       { type: "nouvelle", texte: "Encore une journée où j'ai eu de la chance de t'avoir dans ma vie." },
-      { type: "surprise", texte: "Tu te souviens du jour ou Monsieur Diedhiou nous a surpris a l'aube?" },
+      { type: "surprise", texte: "Tu te souviens du jour où Monsieur Diedhiou nous a surpris à l'aube ?" },
       { type: "surprise", texte: "Une nouvelle journée, la même envie : prendre soin de toi." },
       { type: "nouvelle", texte: "Petite nouvelle du jour : tu me manques un peu plus que d'habitude." },
       { type: "surprise", texte: "Si je pouvais t'offrir une chose aujourd'hui, ce serait ton sourire préféré." },
@@ -2019,6 +2315,143 @@
 
     // Mélange automatique dès l'ouverture de la page
     createPuzzle();
+
+    /* ================= NOUVEAUX TOURS ================= */
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const aSurvol = window.matchMedia("(hover: hover)").matches;
+
+    // 1) Traînée de petits cœurs qui suit la souris
+    if (!prefersReduced && aSurvol) {
+      let dernierPassage = 0;
+      window.addEventListener("mousemove", (e) => {
+        const maintenant = Date.now();
+        if (maintenant - dernierPassage < 90) return;
+        dernierPassage = maintenant;
+
+        const c = document.createElement("div");
+        c.className = "coeur-suivi";
+        c.textContent = "♥";
+        c.style.left = (e.clientX - 6) + "px";
+        c.style.top = (e.clientY - 6) + "px";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 1100);
+      });
+    }
+
+    // 2) Double-clic n'importe où = un cœur qui pulse, façon "like"
+    document.addEventListener("dblclick", (e) => {
+      if (prefersReduced) return;
+      const c = document.createElement("div");
+      c.className = "coeur-double-tap";
+      c.textContent = "♥";
+      c.style.left = e.clientX + "px";
+      c.style.top = e.clientY + "px";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 900);
+    });
+
+    // 3) La lune : clique dessus pour un petit clin d'œil
+    const moonCard = document.getElementById("moonCard");
+    const moonMessages = [
+      "Même la lune trouve que tu es la plus belle chose du ciel.",
+      "Elle brille, mais beaucoup moins fort que ton sourire.",
+      "Elle veille sur toi ce soir, comme tous les soirs."
+    ];
+    let moonIndex = 0;
+    moonCard.addEventListener("click", () => {
+      const texte = document.querySelector(".moon-text");
+      texte.textContent = moonMessages[moonIndex % moonMessages.length];
+      moonIndex++;
+    });
+
+    // 4) Un petit cadeau à ouvrir
+    const giftBox = document.getElementById("giftBox");
+    const giftMessage = document.getElementById("giftMessage");
+    const giftHint = document.getElementById("giftHint");
+    let cadeauOuvert = false;
+
+    function coeurCadeau() {
+      const couleurs = ["var(--primary)", "var(--secondary)", "var(--accent)"];
+      const c = document.createElement("div");
+      c.className = "confetti-cadeau";
+      c.textContent = "♥";
+      c.style.color = couleurs[Math.floor(Math.random() * couleurs.length)];
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.setProperty("--derive", (Math.random() * 120 - 60) + "px");
+      c.style.setProperty("--tour", (Math.random() * 300 + 120) + "deg");
+      const duree = 2.2 + Math.random() * 1.8;
+      c.style.animationDuration = duree + "s";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), duree * 1000 + 200);
+    }
+
+    giftBox.addEventListener("click", () => {
+      if (cadeauOuvert) return;
+      cadeauOuvert = true;
+
+      if (!prefersReduced) {
+        giftBox.classList.add("secoue");
+        setTimeout(() => {
+          giftBox.classList.remove("secoue");
+          giftBox.classList.add("ouvert");
+          giftMessage.classList.add("show");
+          giftHint.style.opacity = "0";
+          for (let i = 0; i < 22; i++) {
+            setTimeout(coeurCadeau, i * 60);
+          }
+        }, 550);
+      } else {
+        giftBox.classList.add("ouvert");
+        giftMessage.classList.add("show");
+        giftHint.style.opacity = "0";
+      }
+    });
+
+    // 5) Mot secret caché : tape "chaton" n'importe où sur la page
+    const secretOverlay = document.getElementById("secretOverlay");
+    const closeSecret = document.getElementById("closeSecret");
+    const motSecret = "chaton";
+    let tamponClavier = "";
+
+    function coeurSecret() {
+      const c = document.createElement("div");
+      c.className = "secret-coeur";
+      c.textContent = Math.random() > 0.5 ? "♥" : "✦";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.setProperty("--derive", (Math.random() * 160 - 80) + "px");
+      c.style.setProperty("--tour", (Math.random() * 360 + 180) + "deg");
+      const duree = 2.6 + Math.random() * 2.4;
+      c.style.animationDuration = duree + "s";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), duree * 1000 + 200);
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key.length !== 1) return;
+      tamponClavier = (tamponClavier + e.key.toLowerCase()).slice(-motSecret.length);
+      if (tamponClavier === motSecret) {
+        secretOverlay.classList.add("show");
+        document.body.classList.add("modal-open");
+        if (!prefersReduced) {
+          for (let i = 0; i < 28; i++) {
+            setTimeout(coeurSecret, i * 55);
+          }
+        }
+      }
+    });
+
+    closeSecret.addEventListener("click", () => {
+      secretOverlay.classList.remove("show");
+      document.body.classList.remove("modal-open");
+    });
+
+    secretOverlay.addEventListener("click", (e) => {
+      if (e.target === secretOverlay) {
+        secretOverlay.classList.remove("show");
+        document.body.classList.remove("modal-open");
+      }
+    });
   </script>
 
 </body>
