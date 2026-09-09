@@ -745,6 +745,126 @@
     100%{ transform:translate(-50%,-50%) scale(1.05); opacity:0; }
   }
 
+  /* ---------- Carte mystère : le souvenir à ouvrir ---------- */
+  .souvenir-panel{ cursor:pointer; user-select:none; }
+  .souvenir-mystere{
+    position:relative;
+    width:150px; height:150px;
+    margin:6px auto 0;
+    border-radius:28px;
+    background:linear-gradient(150deg, var(--primary), var(--secondary));
+    box-shadow:var(--shadow-md);
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    transition:transform .3s cubic-bezier(.2,1.4,.4,1), box-shadow .3s ease;
+    animation:mystereRespire 3.2s ease-in-out infinite;
+  }
+  @keyframes mystereRespire{
+    0%,100%{ transform:scale(1) rotate(0deg); }
+    50%{ transform:scale(1.035) rotate(-1.2deg); }
+  }
+  .souvenir-panel:hover .souvenir-mystere{
+    transform:scale(1.06);
+    box-shadow:var(--shadow-lg);
+  }
+  .souvenir-mystere.secoue{
+    animation:mystereSecousse .45s ease-in-out infinite;
+  }
+  @keyframes mystereSecousse{
+    0%,100%{ transform:rotate(0deg) scale(1.02); }
+    25%{ transform:rotate(-6deg) scale(1.05); }
+    75%{ transform:rotate(6deg) scale(1.05); }
+  }
+  .souvenir-lueur{
+    position:absolute;
+    inset:-40%;
+    background:conic-gradient(from 0deg, rgba(255,255,255,0), rgba(255,255,255,.5), rgba(255,255,255,0) 30%);
+    animation:tourneLueur 3.4s linear infinite;
+  }
+  @keyframes tourneLueur{ to{ transform:rotate(360deg); } }
+  .souvenir-icone{
+    position:relative;
+    z-index:2;
+    color:#fff;
+    font-size:2.4rem;
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.18));
+  }
+  .souvenir-icone.petit{
+    position:absolute;
+    font-size:1rem;
+    opacity:.75;
+    z-index:1;
+  }
+  .souvenir-icone.i1{ top:16px; left:20px; }
+  .souvenir-icone.i2{ bottom:20px; right:18px; }
+  .souvenir-icone.i3{ top:24px; right:26px; font-size:.8rem; }
+  .souvenir-panel.ouvert .souvenir-mystere{ opacity:0; transform:scale(.7); pointer-events:none; }
+
+  .souvenir-flash{
+    position:fixed; inset:0; z-index:2500;
+    pointer-events:none;
+    background:radial-gradient(circle at 50% 55%, rgba(255,255,255,.9), rgba(255,92,138,.35) 45%, transparent 75%);
+    opacity:0;
+    animation:flashSouvenir 1s ease-out forwards;
+  }
+  @keyframes flashSouvenir{
+    0%{ opacity:0; }
+    18%{ opacity:1; }
+    100%{ opacity:0; }
+  }
+
+  .souvenir-modal-box{
+    background:linear-gradient(160deg, #1d1330, #171126);
+    padding-top:clamp(34px, 6vw, 50px);
+  }
+  .souvenir-photo-wrap{
+    width:min(300px, 100%);
+    margin:0 auto 22px;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,.45), 0 0 0 6px rgba(255,255,255,.06);
+    transform:scale(.4) rotate(-8deg);
+    opacity:0;
+  }
+  .souvenir-modal-box.reveler .souvenir-photo-wrap{
+    animation:souvenirApparait .85s cubic-bezier(.2,1.4,.4,1) forwards;
+  }
+  @keyframes souvenirApparait{
+    0%{ opacity:0; transform:scale(.35) rotate(-10deg); }
+    55%{ opacity:1; transform:scale(1.06) rotate(2deg); }
+    100%{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  .souvenir-photo{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  .souvenir-caption{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    color:#fff;
+    font-size:1.2rem;
+    line-height:1.6;
+    max-width:360px;
+    margin:0 auto 26px;
+    opacity:.95;
+  }
+  .souvenir-actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .btn-clair{
+    border-color:rgba(255,255,255,.5);
+    color:#fff;
+  }
+  .btn-clair:hover{
+    background:#fff;
+    color:var(--text);
+  }
+
   @media (max-width:820px){
     .nav-links{
       position:absolute; top:64px; left:5%; right:5%;
@@ -791,7 +911,7 @@
       <canvas id="etincelles" aria-hidden="true"></canvas>
       <div class="container hero-inner">
         <div class="eyebrow">Une page écrite pour toi</div>
-        <h1 class="hero">Ma <em>Marem</em></h1>
+        <h1>Ma <em>Marem</em></h1>
         <p class="hero-description">
           Mariam, cette page est une petite parenthèse que j'ai voulue pour toi :
           un endroit où chaque mot, chaque détail et chaque surprise racontent
@@ -945,7 +1065,7 @@
         </div>
 
         <div class="panel dark reveal">
-          <div style="font-size:1.8rem; margin-bottom:8px;">♥</div>
+          <div class="modal-symbol" style="font-size:1.8rem; margin-bottom:8px;">♥</div>
           <h3 style="font-family:'Fraunces',serif; font-size:1.6rem;">Une petite promesse</h3>
           <p style="margin-top:14px; font-size:.94rem; line-height:1.85; opacity:.95;">
             Je ne te promets pas que chaque journée sera parfaite.
@@ -990,16 +1110,16 @@
           </div>
         </div>
 
-        <div class="panel reveal" style="margin-top:34px;">
+        <div class="panel reveal souvenir-panel" id="souvenirCard">
           <div class="eyebrow">Un souvenir précieux</div>
-          <img
-            src="POCHETTE.jpeg"
-            alt="Un souvenir"
-            style="width:100%; max-width:300px; border-radius:20px; margin:0 auto 20px; display:block; box-shadow:var(--shadow-md);"
-          >
-          <p style="font-family:'Fraunces',serif; font-style:italic; font-size:1.15rem; line-height:1.6; color:var(--text);">
-            C'est le seul souvenir que j'ai de toi, mon chaton.
-          </p>
+          <div class="souvenir-mystere" id="souvenirMystere">
+            <div class="souvenir-lueur"></div>
+            <div class="souvenir-icone">✦</div>
+            <div class="souvenir-icone petit i1">♥</div>
+            <div class="souvenir-icone petit i2">✦</div>
+            <div class="souvenir-icone petit i3">♥</div>
+          </div>
+          <p class="gift-hint">touche pour ouvrir</p>
         </div>
       </div>
     </section>
@@ -1087,6 +1207,20 @@
       <h2>Mot secret trouvé</h2>
       <p>Personne ne t'a dit de chercher ça. Tu l'as juste trouvé. Comme moi, un jour, je t'ai trouvée toi. ♥</p>
       <button class="btn primary" id="closeSecret">Fermer</button>
+    </div>
+  </div>
+
+  <!-- REVELATION DU SOUVENIR -->
+  <div class="modal" id="souvenirModal">
+    <div class="modal-box souvenir-modal-box">
+      <div class="souvenir-photo-wrap" id="souvenirPhotoWrap">
+        <img src="POCHETTE.jpeg" alt="Un souvenir" class="souvenir-photo" id="souvenirPhoto">
+      </div>
+      <p class="souvenir-caption">C'est le seul souvenir que j'ai de toi, mon chaton.</p>
+      <div class="souvenir-actions">
+        <a class="btn primary" href="POCHETTE.jpeg" download="souvenir-mariam.jpeg">Télécharger</a>
+        <button class="btn btn-clair" id="closeSouvenir">Fermer</button>
+      </div>
     </div>
   </div>
 
@@ -1436,6 +1570,68 @@
     });
     secretOverlay.addEventListener("click", e => {
       if (e.target === secretOverlay){ secretOverlay.classList.remove("show"); document.body.classList.remove("modal-open"); }
+    });
+
+    /* Révélation spectaculaire du souvenir */
+    const souvenirCard = document.getElementById("souvenirCard");
+    const souvenirMystere = document.getElementById("souvenirMystere");
+    const souvenirModal = document.getElementById("souvenirModal");
+    const souvenirModalBox = souvenirModal.querySelector(".modal-box");
+    const closeSouvenir = document.getElementById("closeSouvenir");
+    let souvenirOuvert = false;
+
+    function ouvrirSouvenir(){
+      if (souvenirOuvert) return;
+      souvenirOuvert = true;
+
+      const finaliser = () => {
+        souvenirCard.classList.add("ouvert");
+
+        if (!prefersReduced){
+          const flash = document.createElement("div");
+          flash.className = "souvenir-flash";
+          document.body.appendChild(flash);
+          setTimeout(() => flash.remove(), 1050);
+
+          const couleurs = ["#ff5c8a", "#8b5cf6", "#ffb86b"];
+          for(let i = 0; i < 30; i++) setTimeout(() => confetti(couleurs), i * 45);
+        }
+
+        souvenirModal.classList.add("show");
+        document.body.classList.add("modal-open");
+        souvenirModalBox.classList.remove("reveler");
+        void souvenirModalBox.offsetWidth;
+        souvenirModalBox.classList.add("reveler");
+      };
+
+      if (!prefersReduced){
+        souvenirMystere.classList.add("secoue");
+        setTimeout(() => {
+          souvenirMystere.classList.remove("secoue");
+          finaliser();
+        }, 480);
+      } else {
+        finaliser();
+      }
+    }
+
+    souvenirCard.addEventListener("click", ouvrirSouvenir);
+    souvenirCard.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); ouvrirSouvenir(); }
+    });
+    souvenirCard.setAttribute("tabindex", "0");
+    souvenirCard.setAttribute("role", "button");
+    souvenirCard.setAttribute("aria-label", "Ouvrir le souvenir surprise");
+
+    function fermerSouvenir(){
+      souvenirModal.classList.remove("show");
+      document.body.classList.remove("modal-open");
+      souvenirOuvert = false;
+      souvenirCard.classList.remove("ouvert");
+    }
+    closeSouvenir.addEventListener("click", fermerSouvenir);
+    souvenirModal.addEventListener("click", e => {
+      if (e.target === souvenirModal) fermerSouvenir();
     });
   </script>
 
