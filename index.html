@@ -3,1389 +3,1521 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mariam — une page qui n'est qu'à toi</title>
-<meta name="description" content="Une page écrite pour Mariam.">
+<title>MARIAM — un numéro pour toi seule</title>
+<meta name="description" content="Un numéro spécial écrit pour Mariam.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500;1,700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --noir:#07050d;
-    --nuit:#0d0918;
-    --nuit-2:#150f24;
-    --brume:rgba(255,255,255,.055);
-    --ligne:rgba(255,255,255,.10);
-    --rose:#ff6b9d;
-    --rose-pale:#ffb3cd;
-    --miel:#ffd9a8;
-    --lilas:#b18cff;
-    --texte:#f4eefb;
-    --doux:rgba(244,238,251,.60);
-    --flou:blur(22px);
-    --r:22px;
-    --ease:cubic-bezier(.16,1,.3,1);
+    --papier:#efe7d8;
+    --papier-2:#e5dac6;
+    --encre:#15120e;
+    --encre-2:#4a423a;
+    --rouge:#c8372a;
+    --bleu:#26407e;
+    --jaune:#e0a52b;
+    --filet:#15120e;
+    --mono:'Courier Prime',monospace;
+    --titre:'Archivo Black',sans-serif;
+    --serif:'Playfair Display',serif;
+    --dur:.42s cubic-bezier(.2,.9,.25,1);
+    --ombre:6px 6px 0 var(--encre);
+    --ombre-sm:3px 3px 0 var(--encre);
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; }
   body{
-    background:var(--noir);
-    color:var(--texte);
-    font-family:'Outfit',sans-serif;
-    font-weight:300;
+    background:var(--papier);
+    background-image:
+      radial-gradient(circle at 18% 12%, rgba(200,55,42,.07), transparent 42%),
+      radial-gradient(circle at 84% 76%, rgba(38,64,126,.07), transparent 46%);
+    color:var(--encre);
+    font-family:var(--mono);
+    font-size:16px;
     overflow-x:hidden;
-    -webkit-font-smoothing:antialiased;
   }
-  body.verrou{ overflow:hidden; }
-  ::selection{ background:var(--rose); color:var(--noir); }
+  body.fige{ overflow:hidden; }
+  ::selection{ background:var(--jaune); color:var(--encre); }
   a{ color:inherit; text-decoration:none; }
   button{ border:0; background:none; color:inherit; cursor:pointer; font:inherit; }
   img{ display:block; }
 
-  /* ---------- fond ---------- */
-  .ciel{
-    position:fixed; inset:0; z-index:-3;
-    background:
-      radial-gradient(70% 50% at 15% 10%, rgba(177,140,255,.20), transparent 60%),
-      radial-gradient(60% 50% at 85% 20%, rgba(255,107,157,.16), transparent 60%),
-      radial-gradient(80% 60% at 50% 100%, rgba(255,217,168,.10), transparent 60%),
-      linear-gradient(180deg, var(--noir), var(--nuit) 45%, var(--nuit-2));
+  /* ===== grain / trame ===== */
+  .grain{
+    position:fixed; inset:0; z-index:9000; pointer-events:none;
+    opacity:.5; mix-blend-mode:multiply;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(21,18,14,.10) 1px, transparent 0),
+      radial-gradient(circle at 1px 1px, rgba(21,18,14,.06) 1px, transparent 0);
+    background-size:4px 4px, 7px 7px;
+    background-position:0 0, 2px 3px;
   }
-  #nuit{ position:fixed; inset:0; z-index:-2; pointer-events:none; }
-  .voile{
-    position:fixed; inset:0; z-index:-1; pointer-events:none;
-    background-image:linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-                     linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-    background-size:70px 70px;
-    mask-image:radial-gradient(ellipse 80% 60% at 50% 40%, #000 20%, transparent 80%);
-    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%, #000 20%, transparent 80%);
+  .halftone{
+    position:absolute; pointer-events:none; z-index:0;
+    background-image:radial-gradient(circle, var(--encre) 1.6px, transparent 1.7px);
+    background-size:9px 9px;
+    opacity:.22;
   }
 
-  .enveloppe{
-    width:min(1120px,100%);
+  /* ===== ossature ===== */
+  .colonne{
+    width:min(1180px,100%);
     margin:0 auto;
-    padding:0 clamp(20px,5vw,40px);
+    padding:0 clamp(16px,4vw,34px);
   }
+  .chapter{ position:relative; padding:clamp(4.5rem,10vw,8rem) 0; }
+  .chapter + .chapter{ border-top:3px double var(--filet); }
 
-  /* ---------- typo ---------- */
-  h1,h2,h3{ font-family:'Cormorant Garamond',serif; font-weight:500; letter-spacing:-.01em; }
-  h2{ font-size:clamp(2.3rem,5.2vw,3.9rem); line-height:1.04; }
-  .kicker{
-    display:inline-flex; align-items:center; gap:10px;
-    margin-bottom:22px;
-    color:var(--rose-pale);
-    font-size:.62rem; font-weight:500;
-    letter-spacing:.42em; text-transform:uppercase;
+  .num-chapter{
+    position:absolute; top:clamp(1.5rem,4vw,3rem); left:clamp(4px,2vw,14px);
+    font-family:var(--titre);
+    font-size:clamp(4rem,13vw,9rem);
+    line-height:.8;
+    color:transparent;
+    -webkit-text-stroke:2px rgba(21,18,14,.16);
+    pointer-events:none; z-index:0;
+    user-select:none;
   }
-  .kicker::before{
-    content:''; width:30px; height:1px;
-    background:linear-gradient(90deg, transparent, var(--rose));
+  .etiquette{
+    position:relative; z-index:2;
+    display:inline-block;
+    padding:5px 11px;
+    background:var(--encre);
+    color:var(--papier);
+    font-size:.64rem; letter-spacing:.26em; text-transform:uppercase;
   }
-  .plume{ color:var(--doux); font-size:.95rem; line-height:1.85; }
-  .entete{ max-width:620px; margin-bottom:clamp(2.6rem,5vw,4rem); }
-  .entete.centre{ margin-left:auto; margin-right:auto; text-align:center; }
-  .entete.centre .kicker::after{
-    content:''; width:30px; height:1px;
-    background:linear-gradient(90deg, var(--rose), transparent);
+  .etiquette.rouge{ background:var(--rouge); }
+  .etiquette.bleu{ background:var(--bleu); }
+
+  h2{
+    position:relative; z-index:2;
+    font-family:var(--titre);
+    font-size:clamp(2rem,6.4vw,4.2rem);
+    line-height:.94;
+    letter-spacing:-.02em;
+    text-transform:uppercase;
   }
-  .entete p{ margin-top:18px; }
+  h2 .fin{ color:var(--rouge); }
+  .chapo{
+    position:relative; z-index:2;
+    max-width:58ch;
+    margin-top:22px;
+    color:var(--encre-2);
+    font-size:.95rem; line-height:1.85;
+  }
 
   .bouton{
-    position:relative;
-    display:inline-flex; align-items:center; justify-content:center; gap:10px;
-    padding:14px 28px;
-    border-radius:999px;
-    font-size:.72rem; font-weight:500;
-    letter-spacing:.24em; text-transform:uppercase;
-    border:1px solid var(--ligne);
-    color:var(--texte);
-    background:rgba(255,255,255,.04);
-    backdrop-filter:var(--flou);
-    overflow:hidden;
-    transition:color .4s var(--ease), border-color .4s var(--ease), transform .4s var(--ease);
+    display:inline-flex; align-items:center; gap:10px;
+    padding:12px 22px;
+    border:2.5px solid var(--encre);
+    background:var(--papier);
+    color:var(--encre);
+    font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
+    box-shadow:var(--ombre-sm);
+    transition:.22s var(--dur);
   }
-  .bouton span{ position:relative; z-index:2; }
-  .bouton::before{
-    content:''; position:absolute; inset:0; z-index:1;
-    background:linear-gradient(120deg, var(--rose), var(--lilas));
-    transform:translateY(101%);
-    transition:transform .5s var(--ease);
-  }
-  .bouton:hover::before{ transform:translateY(0); }
-  .bouton:hover{ border-color:transparent; transform:translateY(-2px); }
-  .bouton.solide{ border-color:transparent; background:linear-gradient(120deg, var(--rose), var(--lilas)); color:#160a18; }
-  .bouton.solide::before{ background:linear-gradient(120deg, var(--miel), var(--rose)); }
-  .bouton.fantome{ color:var(--doux); }
-  .bouton.fantome:hover{ color:var(--texte); }
+  .bouton:hover{ transform:translate(3px,3px); box-shadow:0 0 0 var(--encre); background:var(--jaune); }
+  .bouton:active{ transform:translate(5px,5px); box-shadow:none; }
+  .bouton.plein{ background:var(--encre); color:var(--papier); }
+  .bouton.plein:hover{ background:var(--rouge); color:var(--papier); }
+  .bouton.rouge{ background:var(--rouge); color:var(--papier); }
+  .bouton.rouge:hover{ background:var(--jaune); color:var(--encre); }
 
-  section{ position:relative; padding:clamp(5rem,11vw,9rem) 0; }
-
-  /* ---------- barre de progression + nav ---------- */
-  .barre{
-    position:fixed; top:0; left:0; z-index:120;
-    height:2px; width:100%;
-    transform-origin:0 50%;
-    background:linear-gradient(90deg, var(--miel), var(--rose), var(--lilas));
-    transform:scaleX(0);
-  }
-  nav{
-    position:fixed; top:0; left:0; z-index:100;
-    width:100%;
-    padding:22px 0;
-    transition:background .5s var(--ease), padding .5s var(--ease), border-color .5s;
-    border-bottom:1px solid transparent;
-  }
-  nav.colle{
-    background:rgba(7,5,13,.72);
-    backdrop-filter:var(--flou);
-    border-color:var(--ligne);
-    padding:14px 0;
-  }
-  nav .enveloppe{ display:flex; align-items:center; justify-content:space-between; }
-  .marque{
-    font-family:'Cormorant Garamond',serif;
-    font-size:1.4rem; letter-spacing:.02em;
-  }
-  .marque i{ color:var(--rose); font-style:italic; }
-  .liens{ display:flex; gap:34px; list-style:none; }
-  .liens a{
-    position:relative;
-    color:var(--doux);
-    font-size:.64rem; font-weight:500;
-    letter-spacing:.26em; text-transform:uppercase;
-    transition:color .35s var(--ease);
-  }
-  .liens a::after{
-    content:''; position:absolute; left:0; bottom:-7px;
-    width:100%; height:1px;
-    background:var(--rose);
-    transform:scaleX(0); transform-origin:right;
-    transition:transform .45s var(--ease);
-  }
-  .liens a:hover, .liens a.actif{ color:var(--texte); }
-  .liens a:hover::after, .liens a.actif::after{ transform:scaleX(1); transform-origin:left; }
-  .burger{ display:none; font-size:1.4rem; color:var(--texte); }
-
-  /* ---------- HERO ---------- */
-  #accueil{
-    min-height:100svh;
-    display:flex; align-items:center;
-    padding-top:8rem; padding-bottom:4rem;
-    text-align:center;
-  }
-  .hero-inner{ position:relative; }
-  #accueil .kicker{ justify-content:center; }
-  #accueil .kicker::before, #accueil .kicker::after{
-    content:''; width:30px; height:1px;
-    background:linear-gradient(90deg, transparent, var(--rose));
-  }
-  #accueil .kicker::after{ background:linear-gradient(90deg, var(--rose), transparent); }
-  .titre{
-    font-size:clamp(4rem,15vw,11rem);
-    line-height:.9;
-    letter-spacing:-.03em;
-  }
-  .titre .ligne{ display:block; overflow:hidden; }
-  .titre .ligne > span{
+  .marqueur{
     display:inline-block;
-    animation:monte .9s var(--ease) both;
-  }
-  .titre .l2{ animation-delay:.12s; }
-  .titre .l3{ animation-delay:.24s; }
-  .titre em{
-    font-style:italic;
-    background:linear-gradient(110deg, var(--miel), var(--rose) 45%, var(--lilas));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  @keyframes monte{ from{ transform:translateY(105%); opacity:0 } to{ transform:translateY(0); opacity:1 } }
-  .sous-titre{
-    max-width:520px;
-    margin:30px auto 0;
-    color:var(--doux);
-    font-size:1rem; line-height:1.9;
-    opacity:0; animation:monteDoux 1s var(--ease) .5s both;
-  }
-  @keyframes monteDoux{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
-  .actions-hero{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:14px;
-    margin-top:36px;
-    opacity:0; animation:monteDoux 1s var(--ease) .7s both;
-  }
-  .lune{
-    width:150px; height:150px;
-    margin:clamp(3rem,7vw,5rem) auto 0;
-    cursor:pointer;
-    display:grid; place-items:center;
-    opacity:0; animation:monteDoux 1.2s var(--ease) .9s both;
-  }
-  .lune .disque{
-    width:78px; height:78px; border-radius:50%;
-    background:radial-gradient(circle at 32% 30%, #fff, var(--miel) 45%, #e0b6d8 100%);
-    box-shadow:0 0 40px rgba(255,217,168,.45), 0 0 100px rgba(177,140,255,.28);
-    display:grid; place-items:center;
-    font-size:1.1rem;
-    animation:pulse 5s ease-in-out infinite;
-    transition:transform .5s var(--ease);
-  }
-  .lune:hover .disque{ transform:scale(1.1) rotate(-8deg); }
-  .lune .anneau{
-    position:absolute; inset:0;
-    border:1px dashed rgba(255,107,157,.28);
-    border-radius:50%;
-    animation:rot 40s linear infinite;
-  }
-  .lune .anneau.b{ inset:16px; border-color:rgba(177,140,255,.2); animation-duration:28s; animation-direction:reverse; }
-  .lune{ position:relative; }
-  @keyframes rot{ to{ transform:rotate(360deg) } }
-  @keyframes pulse{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.06) } }
-  .lune .parole{
-    position:absolute; bottom:-46px;
-    width:260px; text-align:center;
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:1.02rem; color:var(--rose-pale);
-    transition:opacity .4s var(--ease), transform .4s var(--ease);
-  }
-  .lune .parole.swap{ opacity:0; transform:translateY(-8px); }
-
-  .defile{
-    position:absolute; left:50%; bottom:34px;
-    transform:translateX(-50%);
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-    color:var(--doux);
-    font-size:.58rem; letter-spacing:.4em; text-transform:uppercase;
-    opacity:0; animation:monteDoux 1s var(--ease) 1.2s both;
-  }
-  .defile .trait{
-    width:1px; height:46px;
-    background:linear-gradient(180deg, var(--rose), transparent);
-    animation:glisse 2.4s ease-in-out infinite;
-  }
-  @keyframes glisse{ 0%,100%{ transform:scaleY(.4); opacity:.3; transform-origin:top } 50%{ transform:scaleY(1); opacity:1 } }
-
-  /* ---------- révélation ---------- */
-  .revele{ opacity:0; transform:translateY(30px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
-  .revele.vu{ opacity:1; transform:none; }
-
-  /* ---------- cartes vitrées ---------- */
-  .carte{
-    position:relative;
-    padding:30px;
-    border-radius:var(--r);
-    background:linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
-    border:1px solid var(--ligne);
-    backdrop-filter:var(--flou);
-    overflow:hidden;
-    transition:transform .5s var(--ease), border-color .5s var(--ease);
-  }
-  .carte::after{
-    content:''; position:absolute; inset:0;
-    background:radial-gradient(420px circle at var(--x,50%) var(--y,50%), rgba(255,107,157,.14), transparent 65%);
-    opacity:0; transition:opacity .45s var(--ease); pointer-events:none;
-  }
-  .carte:hover{ transform:translateY(-6px); border-color:rgba(255,107,157,.35); }
-  .carte:hover::after{ opacity:1; }
-
-  .grille{ display:grid; gap:18px; }
-  .g2{ grid-template-columns:repeat(2,1fr); }
-  .g3{ grid-template-columns:repeat(3,1fr); }
-  .g4{ grid-template-columns:repeat(4,1fr); }
-  .motif{
-    width:44px; height:44px;
-    display:grid; place-items:center;
-    border-radius:14px;
-    border:1px solid var(--ligne);
-    background:rgba(255,255,255,.05);
-    color:var(--rose);
-    font-size:1.05rem;
-    margin-bottom:20px;
-  }
-  .carte h3{ font-size:1.4rem; margin-bottom:10px; }
-  .carte p{ color:var(--doux); font-size:.9rem; line-height:1.75; }
-
-  /* ---------- lettres accordéon ---------- */
-  .pile{ display:flex; flex-direction:column; gap:14px; }
-  .lettre{
-    position:relative;
-    border-radius:var(--r);
-    background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
-    border:1px solid var(--ligne);
-    backdrop-filter:var(--flou);
-    overflow:hidden;
-    transition:border-color .45s var(--ease);
-  }
-  .lettre.ouverte{ border-color:rgba(255,107,157,.35); }
-  .lettre-tete{
-    width:100%;
-    display:flex; align-items:center; gap:18px;
-    padding:24px 26px;
-    text-align:left;
-  }
-  .lettre .num{
-    font-family:'Cormorant Garamond',serif;
-    font-size:.9rem; letter-spacing:.2em;
-    color:var(--rose);
-    opacity:.8;
-    min-width:34px;
-  }
-  .lettre .intitule{
-    flex:1;
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1.25rem,2.4vw,1.7rem);
-  }
-  .lettre .plus{
-    width:30px; height:30px;
-    display:grid; place-items:center;
-    border:1px solid var(--ligne);
-    border-radius:50%;
-    font-size:1rem;
-    color:var(--doux);
-    transition:transform .5s var(--ease), background .4s, color .4s;
-  }
-  .lettre.ouverte .plus{ transform:rotate(45deg); background:var(--rose); color:var(--noir); border-color:transparent; }
-  .lettre-corps{
-    max-height:0; overflow:hidden;
-    transition:max-height .7s var(--ease);
-  }
-  .lettre-corps > div{
-    padding:0 26px 28px;
-    color:var(--doux);
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-size:clamp(1.15rem,2.6vw,1.5rem);
-    line-height:1.55;
+    background:var(--jaune);
+    border:2px solid var(--encre);
+    padding:4px 12px;
+    box-shadow:var(--ombre-sm);
+    transform:rotate(-1.4deg);
+    font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
   }
 
-  /* ---------- bento ---------- */
-  .bento{ display:grid; grid-template-columns:repeat(6,1fr); gap:18px; }
-  .bento .carte:nth-child(1){ grid-column:span 3; }
-  .bento .carte:nth-child(2){ grid-column:span 3; }
-  .bento .carte:nth-child(3){ grid-column:span 2; }
-  .bento .carte:nth-child(4){ grid-column:span 2; }
-  .bento .carte:nth-child(5){ grid-column:span 2; }
-  @media (max-width:900px){
-    .bento .carte{ grid-column:span 6 !important; }
-    .g4{ grid-template-columns:repeat(2,1fr); }
-    .g3{ grid-template-columns:1fr; }
-    .g2{ grid-template-columns:1fr; }
-  }
+  /* ===== reveal ===== */
+  .vu-lent{ opacity:0; transform:translateY(26px); transition:opacity .8s var(--dur), transform .8s var(--dur); }
+  .vu-lent.vu{ opacity:1; transform:none; }
 
-  /* ---------- machine à compliments ---------- */
-  .oracle{
+  /* ===== masthead ===== */
+  .masthead{
+    position:sticky; top:0; z-index:800;
+    background:var(--papier);
+    border-bottom:3px solid var(--filet);
+  }
+  .masthead .colonne{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:12px; padding-bottom:12px;
+    gap:18px;
+  }
+  .nom{
+    font-family:var(--titre);
+    font-size:clamp(1.1rem,3.2vw,1.7rem);
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .nom span{ color:var(--rouge); }
+  .issue{
+    font-size:.62rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--encre-2);
     text-align:center;
-    padding:clamp(34px,6vw,58px);
+    line-height:1.6;
   }
-  .oracle .phrase{
-    min-height:96px;
-    display:grid; place-items:center;
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:clamp(1.4rem,3.6vw,2.1rem);
-    line-height:1.4;
-    transition:opacity .35s var(--ease), transform .35s var(--ease);
+  .index{ display:flex; gap:4px; list-style:none; }
+  .index a{
+    display:block;
+    padding:7px 11px;
+    border:2px solid transparent;
+    font-size:.66rem; letter-spacing:.12em; text-transform:uppercase;
+    transition:.2s;
   }
-  .oracle .phrase.parti{ opacity:0; transform:translateY(-10px); }
+  .index a:hover{ border-color:var(--encre); background:var(--jaune); }
+  .index a.on{ background:var(--encre); color:var(--papier); border-color:var(--encre); }
+  .burger{ display:none; font-size:1.3rem; }
 
-  /* ---------- enveloppe cadeau ---------- */
-  .enveloppe-cadeau{
-    width:190px; height:130px;
-    margin:8px auto 0;
-    position:relative;
-    cursor:pointer;
+  .ruban-bas{
+    height:7px;
+    background:repeating-linear-gradient(90deg, var(--encre) 0 14px, transparent 14px 28px);
   }
-  .enveloppe-cadeau .corps{
-    position:absolute; inset:0;
-    border-radius:14px;
-    background:linear-gradient(150deg, rgba(255,107,157,.28), rgba(177,140,255,.28));
-    border:1px solid rgba(255,255,255,.22);
-    backdrop-filter:var(--flou);
+
+  /* ===== ouverture ===== */
+  #ouverture{ padding-top:clamp(3rem,7vw,5rem); }
+  .grille-ouverture{
+    position:relative; z-index:2;
+    display:grid;
+    grid-template-columns:1.55fr .85fr;
+    gap:clamp(20px,3vw,38px);
+    align-items:end;
+  }
+  .bandeau{
+    display:inline-flex; align-items:center;
+    border:2.5px solid var(--encre);
+    box-shadow:var(--ombre);
+    margin-bottom:26px;
     overflow:hidden;
   }
-  .enveloppe-cadeau .rabat{
-    position:absolute; top:0; left:0;
-    width:100%; height:64px;
-    background:linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.03));
+  .bandeau b{
+    padding:8px 16px;
+    background:var(--encre); color:var(--papier);
+    font-size:.66rem; letter-spacing:.28em; text-transform:uppercase;
+  }
+  .bandeau em{
+    padding:8px 16px;
+    background:var(--jaune);
+    font-style:normal;
+    font-size:.66rem; letter-spacing:.2em; text-transform:uppercase;
+  }
+  .tete{
+    font-family:var(--titre);
+    font-size:clamp(3.2rem,13.5vw,11rem);
+    line-height:.82;
+    letter-spacing:-.035em;
+    text-transform:uppercase;
+  }
+  .tete .ligne{ display:block; }
+  .tete .bouge{
+    display:inline-block;
+    background:var(--rouge);
+    color:var(--papier);
+    padding:0 .12em .06em;
+    transform:rotate(-1.4deg);
+    box-shadow:8px 8px 0 var(--encre);
+  }
+  .col-droite{ display:flex; flex-direction:column; gap:18px; align-items:flex-start; }
+  .col-droite .chapo{ margin-top:0; font-size:.9rem; }
+  .tampon{
+    align-self:flex-end;
+    padding:14px 18px;
+    border:3px double var(--rouge);
+    border-radius:50%;
+    color:var(--rouge);
+    font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+    text-align:center; line-height:1.7;
+    transform:rotate(9deg);
+  }
+  .actions-ouverture{ display:flex; flex-wrap:wrap; gap:12px; margin-top:34px; }
+
+  .lune-presse{
+    position:relative; z-index:2;
+    margin-top:clamp(3rem,7vw,5rem);
+    border:3px solid var(--encre);
+    background:var(--papier-2);
+    box-shadow:var(--ombre);
+    display:grid;
+    grid-template-columns:180px 1fr;
+    overflow:hidden;
+  }
+  .lune-visuel{
+    position:relative;
+    background:repeating-linear-gradient(45deg, var(--encre) 0 3px, transparent 3px 9px);
+    display:grid; place-items:center;
+  }
+  .lune-visuel::before{
+    content:'';
+    width:96px; height:96px; border-radius:50%;
+    background:var(--jaune);
+    box-shadow:inset -10px -10px 0 rgba(21,18,14,.16);
+    transition:transform .4s var(--dur);
+  }
+  .lune-visuel::after{
+    content:'';
+    position:absolute; width:96px; height:96px; border-radius:50%;
+    border:3px solid var(--encre);
+  }
+  .lune-texte{ padding:26px 24px; display:flex; flex-direction:column; justify-content:center; gap:12px; }
+  .lune-texte .grain-ligne{
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.15rem,2.8vw,1.6rem);
+    line-height:1.4;
+    transition:opacity .3s, transform .3s;
+  }
+  .lune-texte .grain-ligne.bascule{ opacity:0; transform:translateX(-12px); }
+  .lune-aide{ font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--encre-2); }
+  .lune-tout{ cursor:pointer; }
+  .lune-tout:hover .lune-visuel::before{ transform:scale(1.12); }
+
+  /* ===== tickets ===== */
+  .tickets{
+    position:relative; z-index:2;
+    display:grid; gap:16px;
+    grid-template-columns:repeat(2,1fr);
+    margin-top:14px;
+  }
+  .ticket{
+    position:relative;
+    border:3px solid var(--encre);
+    background:var(--papier);
+    box-shadow:var(--ombre);
+    cursor:pointer;
+    transition:transform .3s var(--dur), box-shadow .3s var(--dur);
+  }
+  .ticket:nth-child(even){ transform:rotate(.7deg); }
+  .ticket:nth-child(odd){ transform:rotate(-.6deg); }
+  .ticket:hover{ transform:rotate(0) translate(-4px,-4px); box-shadow:10px 10px 0 var(--encre); }
+  .ticket.ouvert{ background:var(--encre); color:var(--papier); }
+  .ticket.ouvert .tete-ticket{ border-color:rgba(239,231,216,.4); }
+  .ticket.ouvert .tete-ticket .idx{ color:var(--jaune); }
+  .ticket.ouvert .plus{ background:var(--jaune); color:var(--encre); border-color:var(--jaune); }
+  .tete-ticket{
+    display:flex; align-items:center; gap:16px;
+    padding:20px 22px;
+    border-bottom:3px dashed rgba(21,18,14,.35);
+  }
+  .ticket.ouvert .tete-ticket{ border-bottom-color:rgba(239,231,216,.45); }
+  .tete-ticket .idx{
+    font-family:var(--titre); font-size:.95rem;
+    color:var(--rouge);
+    min-width:32px;
+  }
+  .tete-ticket .nom-ticket{
+    flex:1;
+    font-family:var(--titre);
+    font-size:clamp(1rem,2.2vw,1.3rem);
+    text-transform:uppercase;
+  }
+  .plus{
+    width:32px; height:32px;
+    display:grid; place-items:center;
+    border:2.5px solid var(--encre);
+    font-size:1rem; line-height:1;
+    transition:.35s var(--dur);
+  }
+  .ticket.ouvert .plus{ transform:rotate(135deg); }
+  .corps-ticket{
+    max-height:0; overflow:hidden;
+    transition:max-height .6s var(--dur);
+  }
+  .corps-ticket > p{
+    padding:22px;
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.05rem,2.2vw,1.3rem);
+    line-height:1.6;
+  }
+
+  /* ===== kolonne ===== */
+  .kolonne{
+    position:relative; z-index:2;
+    column-count:3; column-gap:clamp(16px,2.4vw,26px);
+    margin-top:10px;
+  }
+  .fait{
+    break-inside:avoid;
+    margin-bottom:clamp(16px,2.4vw,26px);
+    border:2.5px solid var(--encre);
+    background:var(--papier-2);
+    padding:20px;
+    box-shadow:var(--ombre-sm);
+  }
+  .fait .puce{
+    display:inline-block;
+    padding:3px 9px;
+    background:var(--encre); color:var(--papier);
+    font-size:.58rem; letter-spacing:.22em; text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  .fait:nth-child(3n+2) .puce{ background:var(--rouge); }
+  .fait:nth-child(3n) .puce{ background:var(--bleu); }
+  .fait h3{ font-family:var(--titre); font-size:1.05rem; text-transform:uppercase; margin-bottom:8px; }
+  .fait p{ font-size:.86rem; line-height:1.75; color:var(--encre-2); }
+  @media (max-width:880px){ .kolonne{ column-count:1 } }
+
+  /* ===== bons ===== */
+  .bon{
+    position:relative; z-index:2;
+    margin-top:clamp(2rem,5vw,3.4rem);
+    display:grid;
+    grid-template-columns:1fr auto;
+    border:3px solid var(--encre);
+    background:var(--papier);
+    box-shadow:var(--ombre);
+  }
+  .bon-corps{ padding:clamp(24px,4vw,36px); display:flex; flex-direction:column; justify-content:center; gap:18px; align-items:flex-start; }
+  .bon .formule{
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.2rem,3.1vw,1.75rem);
+    line-height:1.45;
+    min-height:70px;
+    transition:opacity .28s, transform .28s;
+  }
+  .bon .formule.coupee{ opacity:0; transform:translateY(-10px); }
+  .bon-cote{
+    width:118px;
+    border-left:3px solid var(--encre);
+    background:var(--jaune);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px;
+    padding:20px 10px;
+  }
+  .bon-cote .perf{
+    width:100%; height:100%;
+    background:repeating-linear-gradient(0deg, var(--papier) 0 3px, transparent 3px 7px);
+    clip-path:polygon(0 0, 10% 6%, 20% 0, 30% 6%, 40% 0, 50% 6%, 60% 0, 70% 6%, 80% 0, 90% 6%, 100% 0, 100% 100%, 90% 94%, 80% 100%, 70% 94%, 60% 100%, 50% 94%, 40% 100%, 30% 94%, 20% 100%, 10% 94%, 0 100%);
+    opacity:.5;
+  }
+  .bon-cote .txt{ writing-mode:vertical-rl; font-size:.6rem; letter-spacing:.3em; text-transform:uppercase; }
+  @media (max-width:720px){
+    .bon{ grid-template-columns:1fr; }
+    .bon-cote{ width:auto; border-left:0; border-top:3px solid var(--encre); flex-direction:row; }
+    .bon-cote .perf{ display:none; }
+    .bon-cote .txt{ writing-mode:horizontal-tb; }
+  }
+
+  /* ===== enveloppe ===== */
+  .poste-enveloppe{
+    position:relative; z-index:2;
+    margin-top:clamp(2rem,5vw,3.4rem);
+    display:grid; grid-template-columns:repeat(2,1fr);
+    gap:clamp(18px,3vw,30px);
+    align-items:center;
+  }
+  .enveloppe{
+    position:relative;
+    width:min(340px,100%); margin:0 auto;
+    aspect-ratio:1.55/1;
+    cursor:pointer;
+  }
+  .enveloppe .fond{
+    position:absolute; inset:0;
+    background:var(--papier-2);
+    border:3px solid var(--encre);
+    box-shadow:var(--ombre);
+  }
+  .enveloppe .rabat{
+    position:absolute; left:0; top:0; width:100%; height:62%;
+    background:var(--papier);
+    border:3px solid var(--encre);
+    border-bottom:0;
     clip-path:polygon(0 0, 100% 0, 50% 100%);
     transform-origin:top center;
-    transition:transform .7s var(--ease);
+    transition:transform .7s var(--dur);
+    z-index:3;
   }
-  .enveloppe-cadeau .coeur{
-    position:absolute; inset:0;
+  .enveloppe .rabat::after{
+    content:'✦';
+    position:absolute; left:50%; top:10%;
+    transform:translateX(-50%);
+    color:var(--rouge);
+    font-size:1.4rem;
+  }
+  .enveloppe .cachet{
+    position:absolute; right:8%; top:14%;
+    width:74px; height:74px;
+    border-radius:50%;
+    background:var(--rouge);
+    border:3px solid var(--encre);
+    color:var(--papier);
     display:grid; place-items:center;
-    font-size:1.5rem; color:var(--rose-pale);
-    transition:transform .6s var(--ease), opacity .5s;
+    text-align:center;
+    font-size:.52rem; letter-spacing:.14em; text-transform:uppercase;
+    transform:rotate(-14deg);
+    z-index:5;
+    transition:opacity .35s, transform .5s var(--dur);
   }
-  .enveloppe-cadeau:hover .corps{ animation:tremble .7s ease-in-out infinite; }
-  @keyframes tremble{
-    0%,100%{ transform:rotate(-1.5deg) } 50%{ transform:rotate(1.5deg) }
+  .enveloppe .coeur{
+    position:absolute; left:50%; top:52%;
+    transform:translate(-50%,-50%);
+    font-size:1.6rem; color:var(--rouge);
+    z-index:2;
+    transition:.5s var(--dur);
   }
-  .enveloppe-cadeau.ouverte .rabat{ transform:rotateX(180deg); }
-  .enveloppe-cadeau.ouverte .coeur{ transform:translateY(-120px) scale(.4); opacity:0; }
-  .carte-cadeau{
-    max-width:480px; margin:26px auto 0;
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:clamp(1.2rem,3vw,1.6rem); line-height:1.55;
-    opacity:0; transform:translateY(-12px);
-    transition:.6s var(--ease);
-  }
-  .carte-cadeau.vue{ opacity:1; transform:none; }
-  .indice{
-    margin-top:16px;
-    color:var(--doux);
-    font-size:.6rem; letter-spacing:.34em; text-transform:uppercase;
-  }
+  .enveloppe.ouverte .rabat{ transform:rotateX(180deg); }
+  .enveloppe.ouverte .cachet{ opacity:0; transform:rotate(20deg) scale(.5); }
+  .enveloppe.ouverte .coeur{ transform:translate(-50%,-260%) scale(.4); opacity:0; }
+  .enveloppe:hover .fond{ background:var(--jaune); }
+  .texte-enveloppe h3{ font-family:var(--titre); font-size:clamp(1.4rem,3.4vw,2.1rem); text-transform:uppercase; margin-bottom:14px; }
+  .texte-enveloppe p{ font-family:var(--serif); font-style:italic; font-size:clamp(1.1rem,2.6vw,1.4rem); line-height:1.55; }
+  .rev{ max-height:0; overflow:hidden; opacity:0; transition:max-height .6s var(--dur), opacity .5s var(--dur); }
+  .rev.ouvert{ max-height:340px; opacity:1; margin-top:18px; }
+  @media (max-width:820px){ .poste-enveloppe{ grid-template-columns:1fr } }
 
-  /* ---------- souvenir / polaroid ---------- */
-  .polaroid{
-    position:relative;
-    width:min(330px,86%);
-    margin:0 auto;
-    padding:16px 16px 22px;
-    background:linear-gradient(160deg, rgba(255,255,255,.94), rgba(240,232,246,.9));
-    border-radius:6px;
-    box-shadow:0 40px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.2);
-    transform:rotate(-3deg);
-    cursor:pointer;
-    transition:transform .6s var(--ease), box-shadow .6s var(--ease);
+  /* ===== souvenir ===== */
+  .planche-souvenir{
+    position:relative; z-index:2;
+    margin-top:clamp(2rem,5vw,3.4rem);
+    border:3px solid var(--encre);
+    background:var(--papier-2);
+    box-shadow:var(--ombre);
+    padding:clamp(24px,5vw,46px);
+    display:grid; grid-template-columns:.9fr 1fr;
+    gap:clamp(20px,3.5vw,40px);
+    align-items:center;
   }
-  .polaroid:hover{ transform:rotate(0deg) scale(1.04); box-shadow:0 50px 110px rgba(0,0,0,.7); }
-  .polaroid img{ width:100%; height:auto; border-radius:3px; }
-  .polaroid .legende{
-    margin-top:14px;
-    color:#3a2b40;
-    font-family:'Cormorant Garamond',serif; font-style:italic;
+  .planche-souvenir .legende{
+    font-family:var(--titre); font-size:.9rem;
+    letter-spacing:.22em; text-transform:uppercase;
+    border-bottom:3px solid var(--encre);
+    padding-bottom:10px; margin-bottom:18px;
+  }
+  .planche-souvenir .legende b{ color:var(--rouge); font-weight:400; }
+  .planche-souvenir .note{ font-size:.86rem; line-height:1.8; color:var(--encre-2); }
+  .planche-souvenir .note + .note{ margin-top:14px; }
+  @media (max-width:820px){ .planche-souvenir{ grid-template-columns:1fr } }
+
+  .cadenas-poste{
+    margin-top:22px;
+    border:3px dashed var(--encre);
+    background:var(--papier);
+    padding:34px 22px;
+    text-align:center;
+    cursor:pointer;
+    transition:.35s var(--dur);
+  }
+  .cadenas-poste:hover{ background:var(--jaune); transform:translateY(-3px); }
+  .cadenas-poste .fermeture{ font-size:2rem; }
+  .cadenas-poste .scelle{ font-family:var(--titre); font-size:1rem; letter-spacing:.2em; text-transform:uppercase; margin-top:12px; }
+  .cadenas-poste .tape{ margin-top:8px; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--encre-2); }
+
+  .polaro{
+    position:relative;
+    background:#fbf7f0;
+    border:2.5px solid var(--encre);
+    padding:14px 14px 0;
+    box-shadow:10px 10px 0 rgba(21,18,14,.22);
+    transform:rotate(-2deg);
+    cursor:zoom-in;
+    transition:transform .4s var(--dur), box-shadow .4s var(--dur);
+  }
+  .polaro:hover{ transform:rotate(0) scale(1.02); box-shadow:16px 16px 0 rgba(21,18,14,.22); }
+  .polaro img{ width:100%; height:auto; border:2px solid var(--encre); }
+  .polaro figcaption{
+    padding:14px 2px 16px;
+    font-family:var(--serif); font-style:italic;
     font-size:1.05rem; text-align:center;
   }
-  .polaroid .ruban{
-    position:absolute; top:-14px; left:50%;
-    width:110px; height:28px;
-    transform:translateX(-50%) rotate(-2deg);
-    background:rgba(255,217,168,.55);
-    box-shadow:0 4px 12px rgba(0,0,0,.3);
+  .polaro .scotch{
+    position:absolute; top:-16px; left:50%;
+    width:120px; height:34px;
+    transform:translateX(-50%) rotate(-3deg);
+    background:rgba(224,165,43,.7);
+    border:1.5px solid rgba(21,18,14,.35);
   }
-  .polaroid .cachet{
-    position:absolute; right:-16px; bottom:-14px;
-    padding:8px 14px;
-    border-radius:6px;
-    background:linear-gradient(140deg, var(--rose), var(--lilas));
-    color:#180b19;
-    font-size:.58rem; font-weight:600;
-    letter-spacing:.24em; text-transform:uppercase;
-    transform:rotate(-8deg);
-    box-shadow:0 10px 24px rgba(0,0,0,.45);
+  .polaro .tampon-rouge{
+    position:absolute; right:-18px; top:34%;
+    padding:9px 14px;
+    background:var(--rouge); color:var(--papier);
+    border:2.5px solid var(--encre);
+    font-size:.55rem; letter-spacing:.2em; text-transform:uppercase;
+    transform:rotate(-9deg);
+    box-shadow:var(--ombre-sm);
   }
-  .voile-souvenir{
-    position:relative;
-    width:min(360px,88%);
-    margin:0 auto;
-    padding:60px 30px;
-    text-align:center;
-    border-radius:var(--r);
-    border:1px dashed rgba(255,255,255,.22);
-    background:rgba(255,255,255,.03);
-    backdrop-filter:var(--flou);
-    cursor:pointer;
-    overflow:hidden;
-  }
-  .voile-souvenir .scan{
-    position:absolute; inset:-50%;
-    background:conic-gradient(from 0deg, transparent, rgba(255,217,168,.16), transparent 32%);
-    animation:rot 8s linear infinite;
-  }
-  .voile-souvenir .contenu{ position:relative; z-index:2; }
-  .voile-souvenir .cadenas{ font-size:1.8rem; color:var(--rose); margin-bottom:14px; animation:pulse 4s ease-in-out infinite; }
-  .zone-polo{ display:none; }
-  .zone-polo.vue{ display:block; animation:monteDoux .8s var(--ease) both; }
+  .zone-polaro{ display:none; }
+  .zone-polaro.montee{ display:block; animation:monte .7s var(--dur) both; }
+  @keyframes monte{ from{ opacity:0; transform:translateY(24px) } to{ opacity:1; transform:none } }
 
-  /* ---------- carte du jour ---------- */
-  .du-jour{
-    width:min(640px,100%);
-    margin:0 auto;
-    text-align:center;
-    padding:clamp(32px,6vw,54px);
-    border-radius:var(--r);
-    background:linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-    border:1px solid var(--ligne);
-    backdrop-filter:var(--flou);
-  }
-  .du-jour .devis{
-    display:inline-block; margin-bottom:20px;
-    padding:6px 16px;
-    border-radius:999px;
-    border:1px solid rgba(255,107,157,.4);
-    color:var(--rose-pale);
-    font-size:.58rem; letter-spacing:.3em; text-transform:uppercase;
-  }
-  .du-jour .date{ color:var(--doux); font-size:.72rem; letter-spacing:.18em; text-transform:capitalize; margin-bottom:22px; }
-  .du-jour .texte{
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:clamp(1.5rem,4vw,2.2rem); line-height:1.4;
-  }
-  .du-jour .actions{ margin-top:28px; }
-
-  /* ---------- déclaration ---------- */
-  .sur-enveloppe{
-    position:relative;
+  /* ===== carte du jour ===== */
+  .carte-jour{
+    position:relative; z-index:2;
+    margin:clamp(2rem,5vw,3.4rem) auto 0;
     width:min(660px,100%);
-    margin:0 auto;
-    padding:clamp(40px,7vw,72px) clamp(26px,5vw,58px);
+    border:3px solid var(--encre);
+    background:var(--jaune);
+    box-shadow:var(--ombre);
+    padding:clamp(26px,4.5vw,44px);
     text-align:center;
-    border-radius:var(--r);
-    background:linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
-    border:1px solid var(--ligne);
-    backdrop-filter:var(--flou);
-    overflow:hidden;
   }
-  .sur-enveloppe::before{
-    content:''; position:absolute; inset:0;
-    background:radial-gradient(600px circle at 50% -20%, rgba(255,107,157,.16), transparent 70%);
+  .carte-jour::before{
+    content:''; position:absolute; inset:10px;
+    border:2px solid rgba(21,18,14,.3); pointer-events:none;
+  }
+  .carte-jour .ruban-haut{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+    padding:5px 14px;
+    background:var(--encre); color:var(--papier);
+    font-size:.58rem; letter-spacing:.24em; text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .carte-jour .date{
+    margin-top:16px;
+    font-size:.68rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--encre-2);
+  }
+  .carte-jour .texte{
+    margin-top:20px;
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.3rem,3.4vw,1.9rem);
+    line-height:1.45;
+    filter:blur(11px);
+    transition:filter .8s var(--dur);
+  }
+  .carte-jour .texte.lisible{ filter:blur(0); }
+  .carte-jour .bas{ margin-top:28px; }
+
+  /* ===== declaration ===== */
+  .feuille{
+    position:relative; z-index:2;
+    width:min(720px,100%); margin:0 auto;
+    border:3px solid var(--encre);
+    background:var(--papier);
+    box-shadow:var(--ombre);
+    padding:clamp(28px,5.5vw,58px);
+  }
+  .feuille::before{
+    content:''; position:absolute; inset:14px;
+    border:1.5px solid rgba(21,18,14,.22); pointer-events:none;
+  }
+  .feuille > *{ position:relative; }
+  .feuille .objet{ font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:var(--encre-2); }
+  .feuille h2{ margin-top:10px; }
+  .feuille .texte-frappe{
+    margin-top:30px;
+    font-family:var(--mono); font-size:clamp(.9rem,2vw,1.02rem);
+    line-height:2;
+  }
+  .ligne{
+    overflow:hidden;
+    white-space:nowrap;
+    border-right:3px solid var(--encre);
+    width:0;
+    margin-bottom:2px;
+  }
+  .ligne.terminee{ animation:frappe 1.5s steps(28) both; width:100%; }
+  @keyframes frappe{ from{ width:0 } to{ width:100% } }
+  .ligne.gras{
+    font-family:var(--serif); font-style:italic; font-weight:700;
+    font-size:clamp(1.15rem,3vw,1.55rem);
+    color:var(--rouge);
+    white-space:normal; border-right:0;
+  }
+  .ligne.terminee.gras{ animation:frappeFin 1.2s var(--dur) both; }
+  @keyframes frappeFin{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:none } }
+  .pied-feuille{
+    margin-top:36px; padding-top:18px;
+    border-top:2px solid var(--encre);
+    display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between;
+    font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--encre-2);
+  }
+
+  /* ===== avenir ===== */
+  .col-journal{
+    position:relative; z-index:2;
+    margin-top:14px;
+    column-count:3; column-gap:clamp(18px,2.6vw,28px);
+    column-rule:2px solid rgba(21,18,14,.2);
+  }
+  .col-journal .col{ break-inside:avoid; margin-bottom:26px; }
+  .col-journal .col h3{ font-family:var(--titre); font-size:1.05rem; text-transform:uppercase; margin-bottom:10px; }
+  .col-journal .col .gouttiere{ font-family:var(--titre); font-size:2.4rem; color:var(--rouge); line-height:1; margin-bottom:6px; }
+  .col-journal .col p{ font-size:.86rem; line-height:1.8; color:var(--encre-2); }
+  @media (max-width:880px){ .col-journal{ column-count:1; column-rule:none } }
+
+  /* ===== puzzle ===== */
+  .grille-puzzle{
+    position:relative; z-index:2;
+    width:min(540px,100%);
+    margin:clamp(2rem,5vw,3.2rem) auto 0;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+    padding:5px;
+    border:3px solid var(--encre);
+    background:var(--papier-2);
+    box-shadow:var(--ombre);
+  }
+  .case{
+    position:relative;
+    aspect-ratio:1/1;
+    padding:0;
+    border:0;
+    overflow:hidden;
+    cursor:pointer;
+    background-size:300% 300%;
+    background-repeat:no-repeat;
+    background-color:var(--papier);
+  }
+  .case:hover{ box-shadow:inset 0 0 0 3px var(--rouge); }
+  .case:focus-visible{ outline:3px solid var(--rouge); outline-offset:-3px; }
+  .case.trou{
+    background-image:
+      repeating-linear-gradient(45deg, rgba(21,18,14,.14) 0 4px, transparent 4px 10px);
+    background-size:auto;
+    cursor:default;
+  }
+  .case.trou:hover{ box-shadow:none; }
+  .case.bouge{ animation:secousseCase .22s linear; }
+  @keyframes secousseCase{ 0%,100%{ transform:translate(0,0) } 25%{ transform:translate(-2px,2px) } 75%{ transform:translate(2px,-2px) } }
+  .marque-piece{
+    position:absolute; right:4px; bottom:2px;
+    font-size:.56rem; letter-spacing:.1em;
+    color:var(--papier);
+    text-shadow:0 1px 2px rgba(0,0,0,.7);
     pointer-events:none;
   }
-  .sur-enveloppe > *{ position:relative; z-index:2; }
-  .plis{
-    display:flex; justify-content:center; gap:8px;
-    margin-bottom:26px;
-  }
-  .plis i{ width:5px; height:5px; border-radius:50%; background:var(--rose); opacity:.5; }
-  .corps-lettre > p{
-    margin:20px 0;
-    color:rgba(244,238,251,.82);
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1.1rem,2.4vw,1.35rem);
-    line-height:1.7;
-    opacity:0; transform:translateY(16px);
-    transition:.9s var(--ease);
-  }
-  .corps-lettre.ouvert > p{ opacity:1; transform:none; }
-  .corps-lettre.ouvert > p:nth-child(2){ transition-delay:.15s }
-  .corps-lettre.ouvert > p:nth-child(3){ transition-delay:.3s }
-  .corps-lettre.ouvert > p:nth-child(4){ transition-delay:.45s }
-  .corps-lettre .fort{
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:clamp(1.6rem,3.6vw,2.2rem);
-    background:linear-gradient(110deg, var(--miel), var(--rose), var(--lilas));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .signature{
-    margin-top:34px;
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:1.5rem; color:var(--rose-pale);
-    opacity:0; transform:translateY(10px);
-    transition:.9s var(--ease) .6s;
-  }
-  .corps-lettre.ouvert .signature{ opacity:1; transform:none; }
 
-  /* ---------- frise avenir ---------- */
-  .frise{
-    position:relative;
-    display:grid; gap:20px;
-    grid-template-columns:repeat(3,1fr);
-    padding-top:40px;
+  .pupitre{
+    margin-top:18px;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px;
   }
-  .frise::before{
-    content:''; position:absolute; top:0; left:0; right:0; height:1px;
-    background:linear-gradient(90deg, transparent, var(--ligne) 15%, var(--ligne) 85%, transparent);
+  .pupitre .cadran{
+    padding:7px 13px;
+    border:2.5px solid var(--encre);
+    background:var(--papier);
+    font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
+    box-shadow:var(--ombre-sm);
   }
-  .Etape{ position:relative; padding-top:34px; }
-  .Etape::before{
-    content:''; position:absolute; top:-5px; left:0;
-    width:11px; height:11px; border-radius:50%;
-    background:var(--rose);
-    box-shadow:0 0 0 5px rgba(255,107,157,.16);
-  }
-  .Etape .mot{
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:.9rem; color:var(--miel);
-    letter-spacing:.1em;
-  }
-  .Etape h3{ margin:8px 0 12px; font-size:1.6rem; }
-  .Etape p{ color:var(--doux); font-size:.9rem; line-height:1.75; }
-  @media (max-width:820px){ .frise{ grid-template-columns:1fr } }
+  .pupitre .cadran b{ color:var(--rouge); }
 
-  /* ---------- puzzle ---------- */
-  .table-jeu{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    width:min(480px,100%);
-    margin:0 auto;
-    padding:14px;
-    border-radius:var(--r);
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--ligne);
-    backdrop-filter:var(--flou);
+  .bandeau-fin{
+    position:relative; z-index:2;
+    margin-top:22px;
+    border:3px solid var(--encre);
+    background:var(--encre); color:var(--papier);
+    padding:20px 24px;
+    text-align:center;
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.05rem,2.6vw,1.4rem);
+    line-height:1.55;
+    opacity:0;
+    transform:translateY(12px);
+    transition:.6s var(--dur);
+    pointer-events:none;
   }
-  .tuile{
-    aspect-ratio:1/1;
-    display:grid; place-items:center;
-    border-radius:16px;
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1.8rem,6vw,2.6rem);
-    color:var(--rose-pale);
-    background:linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.02));
-    border:1px solid var(--ligne);
-    cursor:pointer; user-select:none;
-    transition:.4s var(--ease);
-  }
-  .tuile:hover{ transform:translateY(-4px); border-color:rgba(255,107,157,.4); }
-  .tuile.choisie{ color:var(--noir); background:linear-gradient(140deg, var(--miel), var(--rose)); border-color:transparent; transform:translateY(-4px); }
-  .etat-jeu{
-    min-height:26px; margin-top:24px;
-    color:var(--doux);
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:1.1rem;
-  }
+  .bandeau-fin.visible{ opacity:1; transform:none; }
 
-  /* ---------- lightbox / modales ---------- */
-  .voile-fond{
-    position:fixed; inset:0; z-index:2000;
+  /* ===== confettis papier ===== */
+  .chute{
+    position:fixed; top:-60px; z-index:1400;
+    pointer-events:none;
+    width:10px; height:14px;
+    animation:tombe linear forwards;
+  }
+  @keyframes tombe{ to{ transform:translateY(115vh) rotate(var(--r,220deg)); opacity:.1 } }
+  .poussiere{
+    position:fixed; z-index:1300; pointer-events:none;
+    font-family:var(--titre); font-size:15px; color:var(--rouge);
+    animation:pousse .9s ease-out forwards;
+  }
+  @keyframes pousse{ to{ opacity:0; transform:translateY(-60px) rotate(28deg) } }
+
+  /* ===== dialogues ===== */
+  .voile{
+    position:fixed; inset:0; z-index:1800;
     display:grid; place-items:center;
     padding:20px;
-    background:rgba(4,2,8,.82);
-    backdrop-filter:blur(18px);
+    background:rgba(21,18,14,.82);
     opacity:0; pointer-events:none;
-    transition:opacity .45s var(--ease);
+    transition:opacity .35s var(--dur);
   }
-  .voile-fond.ouvert{ opacity:1; pointer-events:auto; }
-  .boite{
-    width:min(560px,100%);
-    padding:clamp(38px,7vw,62px) 30px;
+  .voile.ouvert{ opacity:1; pointer-events:auto; }
+  .carte-dialogue{
+    width:min(520px,100%);
+    border:3px solid var(--encre);
+    background:var(--papier);
+    box-shadow:12px 12px 0 rgba(21,18,14,.6);
+    padding:clamp(28px,5vw,46px);
     text-align:center;
-    border-radius:var(--r);
-    background:linear-gradient(165deg, rgba(31,22,48,.96), rgba(15,10,26,.96));
-    border:1px solid var(--ligne);
-    box-shadow:0 40px 120px rgba(0,0,0,.7);
-    transform:translateY(24px) scale(.94);
-    opacity:0;
-    transition:.55s var(--ease);
+    transform:translateY(22px) rotate(-1deg);
+    transition:.4s var(--dur);
   }
-  .voile-fond.ouvert .boite{ transform:none; opacity:1; }
-  .boite .glyphe{ font-size:2.2rem; margin-bottom:18px; color:var(--miel); animation:pulse 3s ease-in-out infinite; }
-  .boite h2{ font-size:clamp(2rem,6vw,2.9rem); }
-  .boite p{ margin:20px auto 28px; max-width:400px; color:var(--doux); line-height:1.7; }
-  .lightbox img{ width:min(100%,460px); height:auto; border-radius:8px; margin:0 auto 22px; box-shadow:0 30px 80px rgba(0,0,0,.6); }
-  .lightbox-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .voile.ouvert .carte-dialogue{ transform:none; }
+  .carte-dialogue .glyph{ font-size:2rem; margin-bottom:12px; }
+  .carte-dialogue h2{ font-size:clamp(1.5rem,5vw,2.2rem); }
+  .carte-dialogue p{ margin:16px 0 24px; font-size:.9rem; line-height:1.8; color:var(--encre-2); }
+  .lumiere img{
+    width:100%; height:auto;
+    border:3px solid var(--encre);
+    box-shadow:var(--ombre);
+    margin-bottom:22px;
+  }
+  .actions-dialogue{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
 
-  footer{
-    padding:70px 0 90px;
+  /* ===== colophon ===== */
+  .colophon{
+    border-top:3px solid var(--filet);
+    background:var(--encre);
+    color:var(--papier);
+    padding:clamp(3rem,7vw,5rem) 0;
     text-align:center;
-    border-top:1px solid var(--ligne);
   }
-  footer .coeur{
-    font-size:1.4rem; color:var(--rose);
-    animation:pulse 3.4s ease-in-out infinite;
-  }
-  footer p{
+  .colophon .coeur{ font-size:1.8rem; color:var(--rouge); }
+  .colophon p{
     margin-top:18px;
-    color:var(--doux);
-    font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:1.3rem;
+    font-family:var(--serif); font-style:italic;
+    font-size:clamp(1.2rem,3vw,1.7rem);
+    line-height:1.5;
   }
-  footer .fin{
-    margin-top:30px;
-    font-size:.58rem; letter-spacing:.36em; text-transform:uppercase;
-    color:rgba(244,238,251,.35);
+  .colophon .pied{
+    margin-top:32px;
+    font-size:.6rem; letter-spacing:.3em; text-transform:uppercase;
+    color:rgba(239,231,216,.5);
   }
 
-  /* ---------- particules ---------- */
-  .confettis{
-    position:fixed; top:-40px; z-index:1500;
-    pointer-events:none;
-    animation:chute linear forwards;
+  @media (max-width:1000px){
+    .grille-ouverture{ grid-template-columns:1fr; }
+    .col-droite{ align-items:flex-start; }
+    .tampon{ align-self:flex-start; }
+    .lune-presse{ grid-template-columns:1fr; }
+    .lune-visuel{ padding:40px 0; }
+    .tickets{ grid-template-columns:1fr }
   }
-  @keyframes chute{ to{ transform:translateY(112vh) translateX(var(--dx,0px)) rotate(var(--rot,200deg)); opacity:0 } }
-  .echo{
-    position:fixed; z-index:900; pointer-events:none;
-    color:var(--rose); opacity:.5;
-    animation:monteCoeur 1.1s ease-out forwards;
-  }
-  @keyframes monteCoeur{ to{ opacity:0; transform:translateY(-26px) scale(.3) } }
-
   @media (max-width:860px){
     .burger{ display:block; }
-    .liens{
-      position:absolute; top:100%; left:5%; right:5%;
-      display:none; flex-direction:column; gap:20px;
-      padding:26px;
-      border-radius:var(--r);
-      background:rgba(13,9,24,.94);
-      border:1px solid var(--ligne);
-      backdrop-filter:var(--flou);
+    .index{
+      position:absolute; top:100%; left:0; right:0;
+      display:none; flex-direction:column;
+      background:var(--papier);
+      border-bottom:3px solid var(--filet);
+      padding:10px 16px 16px;
+      gap:2px;
     }
-    .liens.ouvert{ display:flex; }
+    .index.ouvert{ display:flex; }
+    .index a{ border-bottom:1px solid rgba(21,18,14,.15); }
+    .issue{ display:none; }
   }
   @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{ animation:none !important; }
-    .revele{ opacity:1; transform:none; transition:none; }
-    .echo{ display:none; }
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    .vu-lent{ opacity:1; transform:none }
+    .poussiere{ display:none }
+    .ligne{ width:100% !important }
   }
 </style>
 </head>
 <body>
 
-<div class="ciel"></div>
-<canvas id="nuit"></canvas>
-<div class="voile"></div>
-<div class="barre" id="barre"></div>
+<div class="grain"></div>
 
-<nav id="nav">
-  <div class="enveloppe">
-    <a class="marque" href="#accueil">M<i>·</i>Mariam</a>
-    <button class="burger" id="burger" aria-label="Menu">☰</button>
-    <ul class="liens" id="liens">
-      <li><a href="#lettres">Lettres</a></li>
-      <li><a href="#attentions">Attentions</a></li>
-      <li><a href="#souvenir">Souvenir</a></li>
-      <li><a href="#declaration">Déclaration</a></li>
-      <li><a href="#avenir">Avenir</a></li>
-      <li><a href="#final">Final</a></li>
-    </ul>
+<header class="masthead">
+  <div class="colonne">
+    <a class="nom" href="#ouverture">MARIAM<span>.</span></a>
+    <div class="issue">Édition spéciale<br>№ 001 — pour une seule lectrice</div>
+    <button class="burger" id="burger" aria-label="Sommaire">☰</button>
+    <nav>
+      <ul class="index" id="index">
+        <li><a href="#ouverture">Ouverture</a></li>
+        <li><a href="#tickets">Tickets</a></li>
+        <li><a href="#kolonne">Kolonne</a></li>
+        <li><a href="#distributions">Distributions</a></li>
+        <li><a href="#souvenir">Souvenir</a></li>
+        <li><a href="#declaration">Déclaration</a></li>
+        <li><a href="#avenir">Avenir</a></li>
+        <li><a href="#puzzle">Puzzle</a></li>
+      </ul>
+    </nav>
   </div>
-</nav>
+  <div class="ruban-bas"></div>
+</header>
 
 <main>
 
-  <!-- HERO -->
-  <section id="accueil">
-    <div class="enveloppe hero-inner">
-      <span class="kicker">Une page écrite pour toi</span>
-      <h1 class="titre">
-        <span class="ligne"><span>Ma</span></span>
-        <span class="ligne l2"><span><em>Marem</em></span></span>
-      </h1>
-      <p class="sous-titre">
-        Pas un site, pas une page : une parenthèse.
-        Un endroit où chaque mot et chaque détail essaient de dire
-        ce que tu sais déjà sans que j'arrive à le formuler.
-      </p>
-      <div class="actions-hero">
-        <a href="#declaration" class="bouton solide"><span>Lire ma déclaration</span></a>
-        <a href="#lettres" class="bouton"><span>Ouvrir les lettres</span></a>
-        <a href="#souvenir" class="bouton fantome"><span>Le souvenir</span></a>
+  <!-- 01 OUVERTURE -->
+  <section class="chapter" id="ouverture">
+    <div class="halftone" style="width:280px;height:280px;right:-60px;top:60px;"></div>
+    <div class="colonne">
+      <div class="grille-ouverture">
+        <div>
+          <div class="bandeau"><b>N° 001</b><em>numéro spécial</em></div>
+          <h1 class="tete">
+            <span class="ligne">Pour</span>
+            <span class="ligne"><span class="bouge">Mariam</span></span>
+          </h1>
+          <p class="chapo">
+            Une revue entière, huit chapitres, une seule destinataire.
+            Rien ici n'a été écrit pour le grand public&nbsp;: tout ce qui suit
+            est sorti de la même conversation, à la même heure, dans la même idée.
+          </p>
+          <div class="actions-ouverture">
+            <a href="#declaration" class="bouton plein">Lire la déclaration</a>
+            <a href="#tickets" class="bouton">Ouvrir les tickets</a>
+            <a href="#puzzle" class="bouton rouge">Aller au puzzle</a>
+          </div>
+        </div>
+        <div class="col-droite">
+          <p class="chapo">
+            L'encart ci-contre change de phrase quand tu le touches.
+            C'est la seule chose interactive de la une.
+          </p>
+          <div class="tampon">exemplaire<br>unique<br>jamais réédité</div>
+        </div>
       </div>
 
-      <div class="lune" id="lune">
-        <div class="anneau"></div>
-        <div class="anneau b"></div>
-        <div class="disque">♥</div>
-        <div class="parole" id="parole">Mon chaton · Mon bonheur</div>
-      </div>
-    </div>
-    <div class="defile"><span>défile</span><span class="trait"></span></div>
-  </section>
-
-  <!-- LETTRES -->
-  <section id="lettres">
-    <div class="enveloppe">
-      <div class="entete centre revele">
-        <span class="kicker">Ce qui ne se dit pas à voix haute</span>
-        <h2>Quatre lettres,<br>jamais envoyées</h2>
-        <p>Elles étaient écrites. Elles attendaient juste un endroit où vivre. Ouvre-les une par une.</p>
-      </div>
-      <div class="pile revele" id="pile">
-        <article class="lettre">
-          <button class="lettre-tete"><span class="num">I</span><span class="intitule">Une vérité</span><span class="plus">+</span></button>
-          <div class="lettre-corps"><div>Ton sourire suffit à changer complètement l'ambiance de mes journées. Je n'ai rien d'autre à dire là-dessus.</div></div>
-        </article>
-        <article class="lettre">
-          <button class="lettre-tete"><span class="num">II</span><span class="intitule">Un surnom</span><span class="plus">+</span></button>
-          <div class="lettre-corps"><div>Tu es mon chaton, ma douceur, et mon endroit préféré au monde.</div></div>
-        </article>
-        <article class="lettre">
-          <button class="lettre-tete"><span class="num">III</span><span class="intitule">Ce que j'aime</span><span class="plus">+</span></button>
-          <div class="lettre-corps"><div>J'aime ta sensibilité, et cette lumière que tu gardes même les jours gris.</div></div>
-        </article>
-        <article class="lettre">
-          <button class="lettre-tete"><span class="num">IV</span><span class="intitule">Une promesse</span><span class="plus">+</span></button>
-          <div class="lettre-corps"><div>Je prendrai toujours soin de ton cœur, avec toute la tendresse que tu mérites.</div></div>
-        </article>
+      <div class="lune-presse lune-tout" id="lunePresse">
+        <div class="lune-visuel"></div>
+        <div class="lune-texte">
+          <span class="etiquette bleu">Encart · les phases</span>
+          <div class="grain-ligne" id="luneLigne">Mon chaton · Mon bonheur</div>
+          <div class="lune-aide">touche l'encart pour changer de lune</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ATTENTIONS -->
-  <section id="attentions">
-    <div class="enveloppe">
-      <div class="entete centre revele">
-        <span class="kicker">Les détails qui font la différence</span>
-        <h2>Tout ce que je remarque<br>et que tu ne crois pas voir</h2>
+  <!-- 02 TICKETS -->
+  <section class="chapter" id="tickets">
+    <span class="num-chapter">02</span>
+    <div class="colonne">
+      <span class="etiquette rouge">Chapitre deux · Correspondance</span>
+      <h2>Quatre tickets<br><span class="fin">jamais asserts</span></h2>
+      <p class="chapo">Ils sont imprimés sur du papier un peu jauni. Clique pour retourner le ticket et lire ce qu'il y a au dos.</p>
+
+      <div class="tickets">
+        <article class="ticket">
+          <div class="tete-ticket"><span class="idx">01</span><span class="nom-ticket">Une vérité</span><span class="plus">+</span></div>
+          <div class="corps-ticket"><p>Ton sourire suffit à changer complètement l'ambiance de mes journées.</p></div>
+        </article>
+        <article class="ticket">
+          <div class="tete-ticket"><span class="idx">02</span><span class="nom-ticket">Un surnom</span><span class="plus">+</span></div>
+          <div class="corps-ticket"><p>Tu es mon chaton, ma douceur, et mon endroit préféré au monde.</p></div>
+        </article>
+        <article class="ticket">
+          <div class="tete-ticket"><span class="idx">03</span><span class="nom-ticket">Ce que j'aime</span><span class="plus">+</span></div>
+          <div class="corps-ticket"><p>J'aime ta sensibilité, et cette lumière que tu gardes même les jours gris.</p></div>
+        </article>
+        <article class="ticket">
+          <div class="tete-ticket"><span class="idx">04</span><span class="nom-ticket">Une promesse</span><span class="plus">+</span></div>
+          <div class="corps-ticket"><p>Je prendrai toujours soin de ton cœur, avec toute la tendresse que tu mérites.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 KOLONNE -->
+  <section class="chapter" id="kolonne">
+    <span class="num-chapter">03</span>
+    <div class="colonne">
+      <span class="etiquette">Chapitre trois · Chronique</span>
+      <h2>Ce que je remarque<br><span class="fin">et que tu ne crois pas voir</span></h2>
+      <p class="chapo">Six faits consignés par le même rédacteur, tous signés le même jour, tous suspects d'être exacts.</p>
+
+      <div class="kolonne vu-lent">
+        <div class="fait"><span class="puce">Fait n°1</span><h3>Ton sourire</h3><p>Il suffit d'un seul de tes sourires pour rendre une journée entière plus belle. C'est presque injuste le niveau où tu mets le curseur.</p></div>
+        <div class="fait"><span class="puce">Fait n°2</span><h3>Ta douceur</h3><p>Ta façon de parler, d'aimer et de prendre soin des autres me touche énormément. Tu ne t'en rends même pas compte.</p></div>
+        <div class="fait"><span class="puce">Fait n°3</span><h3>Ta présence</h3><p>Même quand on ne fait rien de spécial, être avec toi reste précieux.</p></div>
+        <div class="fait"><span class="puce">Fait n°4</span><h3>Ta personnalité</h3><p>Tu rends les moments les plus ordinaires un peu plus spéciaux.</p></div>
+        <div class="fait"><span class="puce">Fait n°5</span><h3>Ta confiance</h3><p>Merci pour les conversations, les confidences et les petits moments partagés sans jamais rien demander en retour.</p></div>
+        <div class="fait"><span class="puce">Fait n°6</span><h3>Simplement toi</h3><p>Je n'ai pas besoin d'une longue liste : c'est toi, tout simplement, que j'aime.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 DISTRIBUTIONS -->
+  <section class="chapter" id="distributions">
+    <span class="num-chapter">04</span>
+    <div class="colonne">
+      <span class="etiquette rouge">Chapitre quatre · Distribution</span>
+      <h2>Une nouvelle du jour,<br><span class="fin">et ce qui est plié</span></h2>
+      <p class="chapo">Chaque jour la revue sort un seul mot. Le reste du chapitre est occupé par un objet plié, avec une adresse écrite au dos.</p>
+
+      <div class="bon vu-lent">
+        <div class="bon-corps">
+          <span class="etiquette">Le bon du jour</span>
+          <div class="formule" id="formule">Un mot sortira de cette machine quand tu le demanderas.</div>
+          <button class="bouton plein" id="formuleBtn">Tirer un autre mot</button>
+        </div>
+        <div class="bon-cote">
+          <div class="perf"></div>
+          <div class="txt">Bons à détacher</div>
+        </div>
       </div>
 
-      <div class="bento revele">
-        <div class="carte">
-          <div class="motif">☀</div>
-          <h3>Ton sourire</h3>
-          <p>Il suffit d'un seul de tes sourires pour rendre une journée entière plus belle. C'est presque injuste le niveau où tu mets le curseur.</p>
-        </div>
-        <div class="carte">
-          <div class="motif">✿</div>
-          <h3>Ta douceur</h3>
-          <p>Ta façon de parler, d'aimer et de prendre soin des autres me touche énormément. Tu ne t'en rends même pas compte.</p>
-        </div>
-        <div class="carte">
-          <div class="motif">✦</div>
-          <h3>Ta présence</h3>
-          <p>Même quand on ne fait rien de spécial, être avec toi reste précieux.</p>
-        </div>
-        <div class="carte">
-          <div class="motif">◈</div>
-          <h3>Ta personnalité</h3>
-          <p>Tu rends les moments les plus ordinaires un peu plus spéciaux.</p>
-        </div>
-        <div class="carte">
-          <div class="motif">♥</div>
-          <h3>Simplement toi</h3>
-          <p>Je n'ai pas besoin d'une longue liste : c'est toi, tout simplement, que j'aime.</p>
-        </div>
-      </div>
-
-      <div class="carte oracle revele" style="margin-top:22px;">
-        <span class="kicker" style="justify-content:center;">Machine à mots doux</span>
-        <div class="phrase" id="oracle">Une phrase t'attend ici. Elle change à chaque clic.</div>
-        <button class="bouton" id="oracleBtn"><span>Encore une</span></button>
-      </div>
-
-      <div class="carte revele" style="margin-top:22px; text-align:center;">
-        <span class="kicker" style="justify-content:center;">Une enveloppe scellée</span>
-        <div class="enveloppe-cadeau" id="cadeau">
-          <div class="corps"><div class="rabat"></div></div>
+      <div class="poste-enveloppe">
+        <div class="enveloppe" id="enveloppe">
+          <div class="fond"></div>
+          <div class="rabat"></div>
           <div class="coeur">♥</div>
+          <div class="cachet">cachet<br>postal</div>
         </div>
-        <div class="carte-cadeau" id="carteCadeau">Le vrai cadeau, c'est de t'avoir dans ma vie, mon chaton. Tout le reste n'est que du bonus. ♥</div>
-        <p class="indice" id="indice">touche l'enveloppe</p>
-      </div>
-
-      <div class="carte revele" style="margin-top:22px; text-align:center;">
-        <span class="kicker" style="justify-content:center;">Ce que je ne te dis pas souvent</span>
-        <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.3rem,3.2vw,1.8rem); line-height:1.5; color:var(--texte); margin:8px 0 24px;">
-          Je ne te promets pas que chaque journée sera parfaite.
-          Je te promets de continuer à chérir les petits moments,
-          de te faire sourire quand je le peux, et de prendre soin de ce lien qui nous unit.
-        </p>
-        <button class="bouton fantome" id="secretBtn"><span>Il reste un secret…</span></button>
-        <div class="carte-cadeau" id="secretNote" style="font-size:1.1rem;">
-          Si tu es arrivée jusqu'ici, alors sache une chose : cette page n'est pas seulement une page web.
-          C'est une petite collection de pensées transformée en souvenir.
-          Et le plus beau détail de toute cette page… <strong>c'est toi.</strong> ♥
+        <div class="texte-enveloppe">
+          <span class="etiquette bleu">Objet : une enveloppe</span>
+          <h3>Le colis du jour</h3>
+          <div class="rev" id="revEnveloppe">
+            <p>Le vrai cadeau, c'est de t'avoir dans ma vie, mon chaton. Tout le reste n'est que du bonus. ♥</p>
+          </div>
+          <p class="chapo" id="aideEnveloppe" style="margin-top:14px; max-width:none">L'enveloppe est scellée. Clique pour briser le cachet.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SOUVENIR + QUOTIDIEN -->
-  <section id="souvenir">
-    <div class="enveloppe">
-      <div class="entete centre revele">
-        <span class="kicker">Le seul objet que je garde</span>
-        <h2>Un souvenir<br>derrière un voile</h2>
-        <p>Touche l'enveloppe. Il n'y a rien dedans — sauf la seule photo que j'ai de toi.</p>
-      </div>
+  <!-- 05 SOUVENIR -->
+  <section class="chapter" id="souvenir">
+    <span class="num-chapter">05</span>
+    <div class="colonne">
+      <span class="etiquette">Chapitre cinq · Iconographie</span>
+      <h2>Le seul objet<br><span class="fin">que je garde</span></h2>
+      <p class="chapo">Il est rangé dans un tiroir, sous plusieurs choses. On l'a décidé : il n'y a rien à l'intérieur, sinon la photo.</p>
 
-      <div class="voile-souvenir revele" id="voileSouvenir" role="button" tabindex="0" aria-label="Ouvrir le souvenir">
-        <div class="scan"></div>
-        <div class="contenu">
-          <div class="cadenas">✦</div>
-          <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.4rem; color:var(--rose-pale);">scellé · pour toi</p>
-          <p class="indice">touche pour briser le sceau</p>
+      <div class="planche-souvenir vu-lent">
+        <div>
+          <div class="legende">Cote <b>K-001</b></div>
+          <p class="note">Année : la seule qui compte. Support : tirage brillant, bord dentelé. État : fréquemment consulté.</p>
+          <p class="note">Le tiroir contient beaucoup d'autres choses. Aucune n'a été regardée aussi souvent.</p>
+          <div class="cadenas-poste" id="tiroir" role="button" tabindex="0" aria-label="Ouvrir le tiroir">
+            <div class="fermeture">✦</div>
+            <div class="scelle">Tiroir scellé</div>
+            <div class="tape">clique pour ouvrir</div>
+          </div>
+        </div>
+
+        <div class="zone-polaro" id="zonePolaro">
+          <figure class="polaro" id="polaro">
+            <div class="scotch"></div>
+            <img src="POCHETTE.jpeg" alt="Le souvenir">
+            <figcaption>Kaffrine · nous deux</figcaption>
+            <div class="tampon-rouge">précieux</div>
+          </figure>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:34px;flex-wrap:wrap;">
+            <button class="bouton plein" id="agrandir"><span>Agrandir</span></button>
+            <a class="bouton" href="POCHETTE.jpeg" download="souvenir-mariam.jpeg"><span>Emporter le tirage</span></a>
+          </div>
         </div>
       </div>
 
-      <div class="zone-polo" id="zonePolo">
-        <div class="polaroid" id="polaroid">
-          <div class="ruban"></div>
-          <img src="POCHETTE.jpeg" alt="Notre souvenir" id="photoSrc">
-          <div class="legende">Kaffrine · nous deux</div>
-          <div class="cachet">precieux</div>
-        </div>
-        <div style="display:flex; gap:12px; justify-content:center; margin-top:34px; flex-wrap:wrap;">
-          <button class="bouton solide" id="agrandirPhoto"><span>Agrandir</span></button>
-          <a class="bouton" href="POCHETTE.jpeg" download="souvenir-mariam.jpeg"><span>Télécharger</span></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="enveloppe" style="margin-top:clamp(5rem,10vw,8rem);">
-      <div class="entete centre revele">
-        <span class="kicker">Une seule chose par jour</span>
-        <h2>La nouvelle du jour</h2>
-      </div>
-      <div class="du-jour revele">
-        <span class="devis" id="duJourDevis">Surprise du jour</span>
-        <div class="date" id="duJourDate"></div>
-        <div class="texte" id="duJourTexte" style="filter:blur(9px); transition:filter .9s var(--ease);">Une phrase t'attend ici.</div>
-        <div class="actions" id="duJourActions">
-          <button class="bouton solide" id="duJourBtn"><span>La lire</span></button>
+      <div class="carte-jour vu-lent" id="carteJour">
+        <span class="ruban-haut" id="rubanJour">Surprise du jour</span>
+        <div class="date" id="dateJour"></div>
+        <div class="texte" id="texteJour">La phrase est là, sous le voile. Clique pour lever le voile.</div>
+        <div class="bas">
+          <button class="bouton plein" id="leverVoile"><span>lever le voile</span></button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DECLARATION -->
-  <section id="declaration">
-    <div class="enveloppe">
-      <div class="sur-enveloppe revele">
-        <div class="plis"><i></i><i></i><i></i></div>
-        <span class="kicker" style="justify-content:center;">Ma déclaration</span>
+  <!-- 06 DECLARATION -->
+  <section class="chapter" id="declaration">
+    <span class="num-chapter">06</span>
+    <div class="colonne">
+      <div class="feuille vu-lent">
+        <div class="objet">Objet : déclaration d'intention</div>
         <h2>Pour toi, Mariam</h2>
-        <div class="corps-lettre" id="corpsLettre">
-          <p>Ma Marem, tu occupes une place particulière dans ma vie, une place que personne d'autre ne pourrait remplacer.</p>
-          <p>Avec toi, les moments les plus simples deviennent précieux. Ta présence apporte une douceur que je ne trouve nulle part ailleurs.</p>
-          <p>Je veux être là dans tes réussites comme dans tes difficultés, te soutenir, te rassurer, et te rappeler chaque jour à quel point tu es importante pour moi.</p>
-          <p class="fort">Je t'aime profondément, mon chaton. Tu es mon bonheur.</p>
-          <div class="signature">— à toi, toujours</div>
+        <div class="texte-frappe" id="machine">
+          <div class="ligne">Ma Marem, tu occupes une place particulière dans ma vie,</div>
+          <div class="ligne">une place que personne d'autre ne pourrait remplacer.</div>
+          <div class="ligne">&nbsp;</div>
+          <div class="ligne">Avec toi, les moments les plus simples deviennent précieux.</div>
+          <div class="ligne">Ta présence apporte une douceur que je ne trouve nulle part ailleurs.</div>
+          <div class="ligne">&nbsp;</div>
+          <div class="ligne">Je veux être là dans tes réussites comme dans tes difficultés,</div>
+          <div class="ligne">te soutenir, te rassurer, et te rappeler chaque jour</div>
+          <div class="ligne">à quel point tu es importante pour moi.</div>
+          <div class="ligne">&nbsp;</div>
+          <div class="ligne gras">Je t'aime profondément, mon chaton. Tu es mon bonheur.</div>
         </div>
-        <div id="lettreActions" style="margin-top:28px;">
-          <button class="bouton solide" id="ouvrirLettre"><span>Ouvrir ma déclaration</span></button>
+        <div class="bas" id="actionsDeclaration" style="margin-top:30px;">
+          <button class="bouton plein" id="frapper"><span>Frapper la déclaration</span></button>
+        </div>
+        <div class="pied-feuille">
+          <span>Rédigé et signé de la main</span>
+          <span>Ne pas reproduire · un seul exemplaire</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- AVENIR -->
-  <section id="avenir">
-    <div class="enveloppe">
-      <div class="entete centre revele">
-        <span class="kicker">Ce qui reste quand le temps passe</span>
-        <h2>Kaffrine,<br>et tout ce qui vient après</h2>
-        <p>Certains souvenirs deviennent des morceaux de bonheur que l'on garde avec soi.</p>
-      </div>
+  <!-- 07 AVENIR -->
+  <section class="chapter" id="avenir">
+    <span class="num-chapter">07</span>
+    <div class="colonne">
+      <span class="etiquette rouge">Chapitre sept · Prospective</span>
+      <h2>Kaffrine,<br><span class="fin">et tout ce qui vient après</span></h2>
+      <p class="chapo">Trois colonnes, trois époques, un seul rédacteur. La rédaction s'engage sur la suite.</p>
 
-      <div class="carte revele" style="text-align:center; padding:clamp(34px,6vw,58px);">
-        <div class="motif" style="margin:0 auto 20px;">♥</div>
-        <span class="kicker" style="justify-content:center;">Kaffrine · nous deux</span>
-        <h3 style="font-size:clamp(1.7rem,4vw,2.4rem);">Des moments que je n'oublierai pas</h3>
-        <p style="max-width:600px; margin:18px auto 0;">
-          Je garde une place toute particulière pour nos moments à Kaffrine. Les discussions, les rires,
-          les petits instants simples font partie des souvenirs que je veux continuer à chérir.
-        </p>
-        <p style="max-width:600px; margin:16px auto 0;">
-          Et j'espère surtout qu'ils ne sont que les premières pages d'une histoire qui nous réserve encore beaucoup de beaux souvenirs.
-        </p>
-      </div>
-
-      <div class="frise revele" style="margin-top:clamp(3rem,6vw,5rem);">
-        <div class="Etape">
-          <span class="mot">I — hier</span>
+      <div class="col-journal vu-lent">
+        <div class="col">
+          <div class="gouttiere">I</div>
           <h3>Nos souvenirs</h3>
-          <p>Les rires, les discussions, les matins à Kaffrine. Ce qui est déjà gravé et que personne ne peut nous reprendre.</p>
+          <p>Les rires, les discussions, les matins à Kaffrine. Ce qui est déjà gravé et que personne ne peut nous reprendre. Je garde une place toute particulière pour ces moments-là.</p>
         </div>
-        <div class="Etape">
-          <span class="mot">II — aujourd'hui</span>
+        <div class="col">
+          <div class="gouttiere">II</div>
           <h3>Notre présent</h3>
-          <p>Les messages, les silences confortables, les jours ordinaires qui ne le restent jamais tout à fait.</p>
+          <p>Les messages, les silences confortables, les jours ordinaires qui ne le restent jamais tout à fait. Même quand on ne fait rien de spécial, être avec toi reste précieux.</p>
         </div>
-        <div class="Etape">
-          <span class="mot">III — demain</span>
+        <div class="col">
+          <div class="gouttiere">III</div>
           <h3>Notre avenir</h3>
-          <p>Bonheur, complicité, réussite, paix, et des projets assez grands pour qu'on ait envie de les vivre à deux.</p>
+          <p>Bonheur, complicité, réussite, paix, et des projets assez grands pour qu'on ait envie de les vivre à deux. J'espère surtout que les souvenirs actuels ne sont que les premières pages.</p>
+        </div>
+      </div>
+
+      <div class="poste-enveloppe" style="grid-template-columns:1fr; margin-top:26px;">
+        <div class="texte-enveloppe" style="text-align:center; border:3px solid var(--encre); background:var(--jaune); padding:clamp(26px,5vw,44px); box-shadow:var(--ombre);">
+          <span class="etiquette">Rubrique · hors-champ</span>
+          <h3 style="margin-top:16px;">La promesse qu'on ne signe pas</h3>
+          <p style="max-width:58ch; margin:0 auto;">
+            Je ne promets pas que chaque jour sera parfait. Je promets de continuer à chérir
+            les petits moments, de te faire sourire quand je le peux, et de prendre soin
+            de ce lien qui nous unit.
+          </p>
+          <button class="bouton rouge" id="btnSecret" style="margin-top:24px;"><span>Il reste un hors-champ</span></button>
+          <div class="rev" id="horsChamp">
+            <p>Si tu es arrivée jusqu'ici : cette page n'est pas une page web, c'est une collection de pensées transformée en souvenir. Et le plus beau détail de toute cette revue… c'est toi. ♥</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FINAL -->
-  <section id="final">
-    <div class="enveloppe">
-      <div class="entete centre revele">
-        <span class="kicker">Le dernier mot de la page</span>
-        <h2>Reconstitue le mot</h2>
-        <p>Les lettres de « Merci » sont mélangées. Touche deux cases pour les échanger.</p>
+  <!-- 08 PUZZLE -->
+  <section class="chapter" id="puzzle">
+    <span class="num-chapter">08</span>
+    <div class="colonne">
+      <span class="etiquette bleu">Chapitre huit · Le jeu</span>
+      <h2>Remettre le tirage<br><span class="fin">en place</span></h2>
+      <p class="chapo">
+        Le tirage de la cote K-001 a été découpé en neuf pièces et mélangé.
+        Clique une pièce, puis sa voisine immédiate du vide&nbsp;: les deux s'échangent.
+        Remets la photo entière pour verrouiller le chapitre.
+      </p>
+
+      <div class="grille-puzzle vu-lent" id="grillePuzzle"></div>
+
+      <div class="pupitre">
+        <span class="cadran">Coups&nbsp;: <b id="coups">0</b></span>
+        <span class="cadran">Record&nbsp;: <b id="record">—</b></span>
+        <span class="cadran">Durée&nbsp;: <b id="chrono">00:00</b></span>
+        <button class="bouton rouge" id="melanger"><span>Découper à nouveau</span></button>
       </div>
-      <div class="revele">
-        <div class="table-jeu" id="tableJeu"></div>
-        <p class="etat-jeu" id="etatJeu">Mélange fait. À toi de jouer.</p>
+
+      <div class="bandeau-fin" id="bandeauFin">
+        Le tirage est complet. Il n'y avait rien de caché dedans&nbsp;— juste une photo,
+        et le fait que j'ai envie de la remettre devant toi.
       </div>
     </div>
   </section>
 
 </main>
 
-<footer>
-  <div class="enveloppe">
+<footer class="colophon">
+  <div class="colonne">
     <div class="coeur">♥</div>
     <p>Kaffrine, nos souvenirs… et tout un avenir à construire.</p>
-    <div class="fin">écrit pour une seule personne · ne pas diffuser</div>
+    <div class="pied">Revue éditée pour une seule personne · Exemplaire unique · Ne pas diffuser</div>
   </div>
 </footer>
 
-<!-- MODALE FINALE -->
-<div class="voile-fond" id="modaleFinal">
-  <div class="boite">
-    <div class="glyphe">♥</div>
-    <h2>Tu y es arrivée</h2>
-    <p>Pas de quoi, mon chaton. Le mot était juste là, à toi de le remettre en place.</p>
-    <button class="bouton solide" id="fermerFinal"><span>Garder ce moment</span></button>
+<!-- DIALOGUE FIN -->
+<div class="voile" id="dialogueFin">
+  <div class="carte-dialogue">
+    <div class="glyph">✓</div>
+    <h2>Tirage reconstitué</h2>
+    <p>Neuf pièces remises en place. Tu as retrouvé le souvenir plus vite que je ne l'espérais.</p>
+    <button class="bouton plein" id="fermerFin"><span>Ranger la revue</span></button>
   </div>
 </div>
 
-<!-- MODALE SECRETE -->
-<div class="voile-fond" id="modaleSecret">
-  <div class="boite">
-    <div class="glyphe">✦</div>
-    <h2>Mot secret trouvé</h2>
-    <p>Personne ne t'a dit de chercher ça. Tu l'as juste trouvé. Comme moi, un jour, je t'ai trouvée toi. ♥</p>
-    <button class="bouton solide" id="fermerSecret"><span>Fermer</span></button>
+<!-- DIALOGUE SECRET -->
+<div class="voile" id="dialogueSecret">
+  <div class="carte-dialogue">
+    <div class="glyph">✦</div>
+    <h2>Mot hors-champ</h2>
+    <p>Personne ne t'a dit de chercher ce mot. Tu l'as juste trouvé. Comme moi, un jour, je t'ai trouvée toi. ♥</p>
+    <button class="bouton plein" id="fermerSecret"><span>Fermer</span></button>
   </div>
 </div>
 
-<!-- LIGHTBOX PHOTO -->
-<div class="voile-fond lightbox" id="modalePhoto">
-  <div class="boite">
-    <img src="POCHETTE.jpeg" alt="Notre souvenir" id="photoLightbox">
-    <p style="margin-bottom:24px;">C'est le seul souvenir que j'ai de toi, mon chaton.</p>
-    <div class="lightbox-actions">
-      <a class="bouton solide" href="POCHETTE.jpeg" download="souvenir-mariam.jpeg"><span>Télécharger</span></a>
-      <button class="bouton" id="fermerPhoto"><span>Fermer</span></button>
+<!-- LUMIERE PHOTO -->
+<div class="voile" id="lumiere">
+  <div class="carte-dialogue lumiere">
+    <img src="POCHETTE.jpeg" alt="Le souvenir">
+    <p style="margin-bottom:22px;">Cote K-001. Le seul souvenir que j'ai de toi, mon chaton.</p>
+    <div class="actions-dialogue">
+      <a class="bouton plein" href="POCHETTE.jpeg" download="souvenir-mariam.jpeg"><span>Emporter</span></a>
+      <button class="bouton" id="fermerLumiere"><span>Fermer</span></button>
     </div>
   </div>
 </div>
 
 <script>
-  const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
-  const COULEURS = ["#ff6b9d","#ffd9a8","#b18cff","#ffb3cd"];
+  const PAPIERS = ["#c8372a","#26407e","#e0a52b","#15120e"];
 
-  /* ---------- ciel étoilé ---------- */
-  const canvas = $("#nuit");
-  const ctx = canvas.getContext("2d");
-  let W = 0, H = 0, DPR = 1;
-  function taille(){
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    W = canvas.width = innerWidth * DPR;
-    H = canvas.height = innerHeight * DPR;
-    canvas.style.width = innerWidth + "px";
-    canvas.style.height = innerHeight + "px";
-  }
-  taille();
-  addEventListener("resize", taille);
-  const etoiles = Array.from({ length: 70 }, () => ({
-    x: Math.random(), y: Math.random(),
-    r: Math.random() * 1.4 + .3,
-    p: Math.random() * Math.PI * 2,
-    v: .3 + Math.random() * .7
-  }));
-  function anim(t){
-    ctx.clearRect(0, 0, W, H);
-    for(const e of etoiles){
-      const a = .12 + .3 * Math.abs(Math.sin(t / 1400 * e.v + e.p));
-      ctx.beginPath();
-      ctx.arc(e.x * W, e.y * H, e.r * DPR, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,225,245," + a.toFixed(2) + ")";
-      ctx.fill();
-    }
-    if(!reduit) requestAnimationFrame(anim);
-  }
-  requestAnimationFrame(anim);
-
-  /* ---------- confettis ---------- */
-  function semer(n){
+  /* ------- confettis papier ------- */
+  function tomber(n){
     if(reduit) return;
     for(let i = 0; i < n; i++){
       setTimeout(() => {
-        const c = document.createElement("div");
-        c.className = "confettis";
-        c.textContent = Math.random() > .35 ? "♥" : "✦";
-        c.style.left = Math.random() * 100 + "vw";
-        c.style.color = COULEURS[Math.floor(Math.random() * COULEURS.length)];
-        c.style.fontSize = (13 + Math.random() * 14) + "px";
-        c.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
-        c.style.setProperty("--rot", (Math.random() * 360 + 160) + "deg");
-        const d = 2.2 + Math.random() * 2;
-        c.style.animationDuration = d + "s";
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), d * 1000 + 200);
-      }, i * 55);
+        const p = document.createElement("div");
+        p.className = "chute";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.background = PAPIERS[Math.floor(Math.random() * PAPIERS.length)];
+        p.style.setProperty("--r", (Math.random() * 720 - 360) + "deg");
+        const d = 2.4 + Math.random() * 2.2;
+        p.style.animationDuration = d + "s";
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), d * 1000 + 200);
+      }, i * 60);
     }
   }
+  function tampon(x, y){
+    const t = document.createElement("div");
+    t.className = "poussiere";
+    t.textContent = Math.random() > .5 ? "♥" : "✦";
+    t.style.left = x + "px";
+    t.style.top = y + "px";
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 900);
+  }
 
-  /* ---------- nav ---------- */
-  const nav = $("#nav"), liens = $("#liens"), burger = $("#burger");
+  /* ------- masthead ------- */
+  const index = $("#index"), burger = $("#burger");
   burger.addEventListener("click", () => {
-    const o = liens.classList.toggle("ouvert");
+    const o = index.classList.toggle("ouvert");
     burger.textContent = o ? "✕" : "☰";
   });
-  $$("#liens a").forEach(a => a.addEventListener("click", () => {
-    liens.classList.remove("ouvert");
+  $$("#index a").forEach(a => a.addEventListener("click", () => {
+    index.classList.remove("ouvert");
     burger.textContent = "☰";
   }));
 
-  const barre = $("#barre");
-  function defiler(){
-    const y = scrollY;
-    const h = document.body.scrollHeight - innerHeight;
-    barre.style.transform = "scaleX(" + (h > 0 ? y / h : 0) + ")";
-    nav.classList.toggle("colle", y > 40);
+  const chapitres = ["ouverture","tickets","kolonne","distributions","souvenir","declaration","avenir","puzzle"];
+  if("IntersectionObserver" in window){
+    const obsChap = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if(!e.isIntersecting) return;
+        $$("#index a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+      });
+    }, { rootMargin: "-42% 0px -52% 0px" });
+    chapitres.forEach(id => { const s = document.getElementById(id); if(s) obsChap.observe(s); });
   }
-  addEventListener("scroll", defiler, { passive: true });
-  defiler();
 
-  const sections = ["lettres","attentions","souvenir","declaration","avenir","final"];
-  const obsNav = new IntersectionObserver(es => {
-    es.forEach(e => {
-      if(!e.isIntersecting) return;
-      $$("#liens a").forEach(a => a.classList.toggle("actif", a.getAttribute("href") === "#" + e.target.id));
-    });
-  }, { rootMargin: "-45% 0px -50% 0px" });
-  sections.forEach(id => { const s = document.getElementById(id); if(s) obsNav.observe(s); });
-
-  /* ---------- révélation ---------- */
+  /* ------- revelations ------- */
   if("IntersectionObserver" in window && !reduit){
     const obs = new IntersectionObserver(es => {
       es.forEach(e => { if(e.isIntersecting){ e.target.classList.add("vu"); obs.unobserve(e.target); } });
-    }, { threshold: .12, rootMargin: "0px 0px -8% 0px" });
-    $$(".revele").forEach(el => obs.observe(el));
+    }, { threshold: .1, rootMargin: "0px 0px -6% 0px" });
+    $$(".vu-lent").forEach(el => obs.observe(el));
   } else {
-    $$(".revele").forEach(el => el.classList.add("vu"));
+    $$(".vu-lent").forEach(el => el.classList.add("vu"));
   }
 
-  /* ---------- survol des cartes ---------- */
-  if(!reduit && matchMedia("(hover:hover)").matches){
-    $$(".carte").forEach(c => c.addEventListener("pointermove", e => {
-      const r = c.getBoundingClientRect();
-      c.style.setProperty("--x", (e.clientX - r.left) + "px");
-      c.style.setProperty("--y", (e.clientY - r.top) + "px");
-    }));
-  }
-
-  /* ---------- lune ---------- */
-  const lune = $("#lune"), parole = $("#parole");
-  const phrases = [
+  /* ------- encart lune ------- */
+  const luneLigne = $("#luneLigne");
+  const phases = [
     "Mon chaton · Mon bonheur",
     "Même la lune trouve que tu es la plus belle chose du ciel.",
     "Elle brille, mais bien moins fort que ton sourire.",
     "Elle veille sur toi ce soir, comme tous les soirs."
   ];
-  let iPhrase = 0;
-  lune.addEventListener("click", () => {
-    iPhrase = (iPhrase + 1) % phrases.length;
-    parole.classList.add("swap");
-    setTimeout(() => { parole.textContent = phrases[iPhrase]; parole.classList.remove("swap"); }, 320);
+  let iPhase = 0;
+  $("#lunePresse").addEventListener("click", () => {
+    iPhase = (iPhase + 1) % phases.length;
+    luneLigne.classList.add("bascule");
+    setTimeout(() => { luneLigne.textContent = phases[iPhase]; luneLigne.classList.remove("bascule"); }, 300);
   });
 
-  /* ---------- lettres accordéon ---------- */
-  $$(".lettre").forEach(l => {
-    const tete = l.querySelector(".lettre-tete");
-    const corps = l.querySelector(".lettre-corps");
+  /* ------- tickets ------- */
+  $$(".ticket").forEach(t => {
+    const tete = t.querySelector(".tete-ticket");
+    const corps = t.querySelector(".corps-ticket");
     tete.addEventListener("click", () => {
-      const ouvert = l.classList.contains("ouverte");
-      $$(".lettre").forEach(x => { x.classList.remove("ouverte"); x.querySelector(".lettre-corps").style.maxHeight = null; });
+      const ouvert = t.classList.contains("ouvert");
+      $$(".ticket").forEach(x => { x.classList.remove("ouvert"); x.querySelector(".corps-ticket").style.maxHeight = null; });
       if(!ouvert){
-        l.classList.add("ouverte");
+        t.classList.add("ouvert");
         corps.style.maxHeight = corps.scrollHeight + "px";
+        tomber(8);
       }
     });
   });
 
-  /* ---------- oracle ---------- */
-  const motsDoux = [
-    "Tu es une très belle personne, à l'intérieur comme à l'extérieur. ♥",
+  /* ------- bon du jour ------- */
+  const formules = [
+    "Tu es une très belle personne, à l'intérieur comme à l'extérieur.",
     "Ton sourire mérite d'être protégé comme un petit trésor.",
     "Il y a quelque chose chez toi qui rend les choses plus belles.",
     "Tu es mon petit rayon de soleil dans les journées ordinaires.",
     "Même sans le savoir, tu rends quelqu'un heureux simplement en étant toi.",
     "Tu mérites beaucoup de douceur, de respect et de bonheur.",
-    "Si je devais choisir une personne à retrouver encore et encore, ce serait toi. ♥",
+    "Si je devais choisir une personne à retrouver encore et encore, ce serait toi.",
     "Ta façon de voir la vie donne envie de la voir un peu comme toi.",
     "Tu rends les silences confortables et les journées plus légères.",
-    "Il y a des gens qui RÉCHAUFFENT une pièce en y entrant. Tu es ça."
+    "Il y a des gens qui réchauffent une pièce en y entrant. Tu es ça."
   ];
-  const oracle = $("#oracle");
+  const formule = $("#formule");
   let dernier = -1;
-  $("#oracleBtn").addEventListener("click", () => {
+  $("#formuleBtn").addEventListener("click", () => {
     let n;
-    do { n = Math.floor(Math.random() * motsDoux.length); } while(n === dernier);
+    do { n = Math.floor(Math.random() * formules.length); } while(n === dernier);
     dernier = n;
-    oracle.classList.add("parti");
-    setTimeout(() => { oracle.textContent = motsDoux[n]; oracle.classList.remove("parti"); }, 320);
+    formule.classList.add("coupee");
+    setTimeout(() => { formule.textContent = formules[n]; formule.classList.remove("coupee"); }, 280);
   });
 
-  /* ---------- cadeau ---------- */
-  const cadeau = $("#cadeau"), carteCadeau = $("#carteCadeau"), indice = $("#indice");
-  let ouvert = false;
-  function ouvrirCadeau(){
-    if(ouvert) return;
-    ouvert = true;
-    cadeau.classList.add("ouverte");
-    carteCadeau.classList.add("vue");
-    indice.style.opacity = "0";
-    semer(22);
-  }
-  cadeau.addEventListener("click", ouvrirCadeau);
-
-  /* ---------- secret ---------- */
-  const secretBtn = $("#secretBtn"), secretNote = $("#secretNote");
-  secretBtn.addEventListener("click", () => {
-    secretNote.classList.toggle("vue");
-    secretBtn.querySelector("span").textContent = secretNote.classList.contains("vue")
-      ? "Tu as trouvé le secret ♥" : "Il reste un secret…";
+  /* ------- enveloppe ------- */
+  const enveloppe = $("#enveloppe"), revEnv = $("#revEnveloppe"), aideEnv = $("#aideEnveloppe");
+  let envOuverte = false;
+  enveloppe.addEventListener("click", () => {
+    if(envOuverte) return;
+    envOuverte = true;
+    enveloppe.classList.add("ouverte");
+    revEnv.classList.add("ouvert");
+    aideEnv.textContent = "Colis livré.";
+    tomber(22);
   });
 
-  /* ---------- souvenir ---------- */
-  const voileSouvenir = $("#voileSouvenir"), zonePolo = $("#zonePolo");
-  function briser(){
-    if(zonePolo.classList.contains("vue")) return;
-    zonePolo.classList.add("vue");
-    voileSouvenir.style.display = "none";
-    semer(26);
+  /* ------- tiroir / souvenir ------- */
+  const tiroir = $("#tiroir"), zonePolaro = $("#zonePolaro");
+  function ouvrirTiroir(){
+    if(zonePolaro.classList.contains("montee")) return;
+    zonePolaro.classList.add("montee");
+    tiroir.innerHTML = '<div style="font-family:var(--titre);font-size:.9rem;letter-spacing:.2em;text-transform:uppercase;">Tiroir ouvert · cote K-001</div>';
+    tomber(20);
   }
-  voileSouvenir.addEventListener("click", briser);
-  voileSouvenir.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); briser(); } });
+  tiroir.addEventListener("click", ouvrirTiroir);
+  tiroir.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); ouvrirTiroir(); } });
 
-  /* ---------- lightbox ---------- */
-  const modalePhoto = $("#modalePhoto");
-  function ouvrirPhoto(){
-    modalePhoto.classList.add("ouvert");
-    document.body.classList.add("verrou");
-  }
-  function fermerPhoto(){
-    modalePhoto.classList.remove("ouvert");
-    document.body.classList.remove("verrou");
-  }
-  $("#agrandirPhoto").addEventListener("click", ouvrirPhoto);
-  $("#fermerPhoto").addEventListener("click", fermerPhoto);
-  modalePhoto.addEventListener("click", e => { if(e.target === modalePhoto) fermerPhoto(); });
+  /* ------- lumiere ------- */
+  const lumiere = $("#lumiere");
+  function ouvrirLumiere(){ lumiere.classList.add("ouvert"); document.body.classList.add("fige"); }
+  function fermerLumiere(){ lumiere.classList.remove("ouvert"); document.body.classList.remove("fige"); }
+  $("#agrandir").addEventListener("click", ouvrirLumiere);
+  $("#polaro").addEventListener("click", ouvrirLumiere);
+  $("#fermerLumiere").addEventListener("click", fermerLumiere);
+  lumiere.addEventListener("click", e => { if(e.target === lumiere) fermerLumiere(); });
 
-  /* ---------- nouveau du jour ---------- */
+  /* ------- carte du jour ------- */
   const textes = [
-    { t:"Surprise", x:"Aujourd'hui encore, tu occupes toutes mes pensées, mon chaton." },
-    { t:"Nouvelle", x:"J'ai pensé à toi en écrivant cette page, et ça m'a fait sourire." },
-    { t:"Surprise", x:"Où que tu sois aujourd'hui, j'espère que ta journée te ressemble : belle." },
-    { t:"Nouvelle", x:"J'ai encore repensé à nos souvenirs de Kaffrine, ils me font toujours sourire." },
-    { t:"Surprise", x:"Un petit rappel du jour : tu comptes énormément pour moi." },
-    { t:"Nouvelle", x:"J'ai hâte de construire encore plus de beaux moments avec toi." },
-    { t:"Surprise", x:"Aujourd'hui, je pense à ton sourire, et ça me suffit pour être heureux." },
-    { t:"Surprise", x:"Petite pensée du jour envoyée avec tout mon cœur, Marem." },
-    { t:"Nouvelle", x:"Encore une journée où j'ai eu de la chance de t'avoir dans ma vie." },
-    { t:"Surprise", x:"Tu te souviens du jour où Monsieur Diedhiou nous a surpris à l'aube ?" },
-    { t:"Surprise", x:"Une nouvelle journée, la même envie : prendre soin de toi." },
-    { t:"Nouvelle", x:"Petite nouvelle du jour : tu me manques un peu plus que d'habitude." },
-    { t:"Surprise", x:"Si je pouvais t'offrir une chose aujourd'hui, ce serait ton sourire préféré." },
-    { t:"Nouvelle", x:"J'ai encore souri en repensant à un de nos souvenirs aujourd'hui." }
+    ["Surprise", "Aujourd'hui encore, tu occupes toutes mes pensées, mon chaton."],
+    ["Nouvelle", "J'ai pensé à toi en écrivant cette revue, et ça m'a fait sourire."],
+    ["Surprise", "Où que tu sois aujourd'hui, j'espère que ta journée te ressemble : belle."],
+    ["Nouvelle", "J'ai encore repensé à nos souvenirs de Kaffrine, ils me font toujours sourire."],
+    ["Surprise", "Un petit rappel du jour : tu comptes énormément pour moi."],
+    ["Nouvelle", "J'ai hâte de construire encore plus de beaux moments avec toi."],
+    ["Surprise", "Aujourd'hui, je pense à ton sourire, et ça me suffit pour être heureux."],
+    ["Surprise", "Petite pensée du jour envoyée avec tout mon cœur, Marem."],
+    ["Nouvelle", "Encore une journée où j'ai eu de la chance de t'avoir dans ma vie."],
+    ["Surprise", "Tu te souviens du jour où Monsieur Diedhiou nous a surpris à l'aube ?"],
+    ["Surprise", "Une nouvelle journée, la même envie : prendre soin de toi."],
+    ["Nouvelle", "Petite nouvelle du jour : tu me manques un peu plus que d'habitude."],
+    ["Surprise", "Si je pouvais t'offrir une chose aujourd'hui, ce serait ton sourire préféré."],
+    ["Nouvelle", "J'ai encore souri en repensant à un de nos souvenirs aujourd'hui."]
   ];
   const jour = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
   const duJour = textes[jour % textes.length];
-  const elDevis = $("#duJourDevis"), elDate = $("#duJourDate"), elTexte = $("#duJourTexte"), elActions = $("#duJourActions");
-  elDevis.textContent = duJour.t + " du jour";
-  elDate.textContent = new Date().toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
-  let lu = false;
-  elActions.addEventListener("click", e => {
-    if(!e.target.closest("button")) return;
-    lu = !lu;
-    if(lu){
-      elTexte.textContent = duJour.x;
-      elTexte.style.filter = "blur(0)";
-      elActions.innerHTML = '<button class="bouton fantome"><span>On verra demain</span></button>';
+  $("#rubanJour").textContent = duJour[0] + " du jour";
+  $("#dateJour").textContent = new Date().toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
+  const texteJour = $("#texteJour");
+  let voile = false;
+  $("#leverVoile").addEventListener("click", e => {
+    voile = !voile;
+    const btn = e.currentTarget.querySelector("span");
+    if(voile){
+      texteJour.textContent = duJour[1];
+      texteJour.classList.add("lisible");
+      btn.textContent = "revoiler";
+      tomber(16);
     } else {
-      elTexte.style.filter = "blur(9px)";
-      elActions.innerHTML = '<button class="bouton solide"><span>La relire</span></button>';
+      texteJour.classList.remove("lisible");
+      btn.textContent = "lever le voile";
     }
   });
 
-  /* ---------- déclaration ---------- */
-  const corpsLettre = $("#corpsLettre"), lettreActions = $("#lettreActions");
-  lettreActions.addEventListener("click", e => {
-    if(!e.target.closest("#ouvrirLettre")) return;
-    corpsLettre.classList.add("ouvert");
-    lettreActions.innerHTML = '<span style="color:var(--rose-pale);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;">déclaration ouverte ♥</span>';
-    semer(20);
-  });
-
-  /* ---------- puzzle ---------- */
-  const table = $("#tableJeu"), etat = $("#etatJeu");
-  const solution = ["M","E","R","C","I"];
-  let selection = null, gagne = false;
-  function fabriquer(){
-    table.innerHTML = "";
-    const melange = [...solution];
-    let identique = false;
-    while(!identique){
-      for(let i = melange.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [melange[i], melange[j]] = [melange[j], melange[i]];
-      }
-      identique = melange.every((l, i) => l === solution[i]);
-    }
-    melange.forEach(lettre => {
-      const t = document.createElement("div");
-      t.className = "tuile";
-      t.textContent = lettre;
-      t.dataset.v = lettre;
-      t.addEventListener("click", () => choisir(t));
-      table.appendChild(t);
+  /* ------- declaration machine a ecrire ------- */
+  const lignes = $$("#machine .ligne");
+  $("#frapper").addEventListener("click", () => {
+    const pas = reduit ? 0 : 120;
+    let i = 0;
+    lignes.forEach(l => {
+      if(!l.textContent.trim()){ setTimeout(() => { l.classList.add("terminee"); }, i); return; }
+      setTimeout(() => l.classList.add("terminee"), i);
+      i += pas;
     });
-    selection = null;
-    gagne = false;
-    etat.textContent = "Mélange fait. À toi de jouer.";
+    setTimeout(() => {
+      $("#actionsDeclaration").innerHTML = '<span class="marqueur">déclaration frappée</span>';
+      tomber(18);
+    }, i + 500);
+  });
+
+  /* ------- hors-champ ------- */
+  const btnSecret = $("#btnSecret"), horsChamp = $("#horsChamp");
+  btnSecret.addEventListener("click", () => {
+    horsChamp.classList.toggle("ouvert");
+    btnSecret.querySelector("span").textContent = horsChamp.classList.contains("ouvert")
+      ? "Tu as lu le hors-champ" : "Il reste un hors-champ";
+  });
+
+  /* ------- puzzle : vrai taquin 3x3 sur le tirage ------- */
+  const grille = $("#grillePuzzle");
+  const elCoups = $("#coups"), elRecord = $("#record"), elChrono = $("#chrono");
+  const bandeauFin = $("#bandeauFin");
+  const N = 3, TOTAL = N * N, IMAGE = "POCHETTE.jpeg";
+
+  let cases = [];        // cases[pos] = piece placee a cette position ; TOTAL-1 = trou
+  let trou = TOTAL - 1;
+  let coups = 0, gagne = false, chrono = 0, minuterie = null;
+
+  let record = null;
+  try { record = Number(localStorage.getItem("mariam-puzzle-record")) || null; } catch(e){}
+  elRecord.textContent = record ? record + " coups" : "—";
+
+  function voisinsDe(i){
+    const r = Math.floor(i / N), c = i % N, out = [];
+    if(r > 0) out.push(i - N);
+    if(r < N - 1) out.push(i + N);
+    if(c > 0) out.push(i - 1);
+    if(c < N - 1) out.push(i + 1);
+    return out;
   }
-  function choisir(t){
-    if(gagne) return;
-    if(!selection){ selection = t; t.classList.add("choisie"); return; }
-    if(selection === t){ t.classList.remove("choisie"); selection = null; return; }
-    const a = selection.dataset.v, b = t.dataset.v;
-    selection.dataset.v = b; t.dataset.v = a;
-    selection.textContent = b; t.textContent = a;
-    selection.classList.remove("choisie"); selection = null;
-    verifier();
-  }
-  function verifier(){
-    const pieces = [...table.children];
-    if(pieces.every((p, i) => p.dataset.v === solution[i])){
-      gagne = true;
-      etat.textContent = "Bravo. « Merci » est en place ♥";
-      pieces.forEach(p => {
-        p.style.color = "#160a18";
-        p.style.background = "linear-gradient(140deg, #ffd9a8, #ff6b9d)";
-        p.style.borderColor = "transparent";
-      });
-      semer(30);
-      setTimeout(() => {
-        modaleFinal.classList.add("ouvert");
-        document.body.classList.add("verrou");
-      }, 1000);
-    } else {
-      etat.textContent = "Presque. Continue à remettre les lettres en place.";
+  const resolu = () => cases.every((v, i) => v === i);
+
+  function fabriquer(){
+    cases = Array.from({ length: TOTAL }, (_, i) => i);
+    trou = TOTAL - 1;
+    // melange par coups legaux : garantit qu'une solution existe toujours
+    let garde = 0;
+    while((resolu() || garde < 60) && garde < 400){
+      const v = voisinsDe(trou);
+      const p = v[Math.floor(Math.random() * v.length)];
+      [cases[trou], cases[p]] = [cases[p], cases[trou]];
+      trou = p;
+      garde++;
+    }
+    while(resolu()){
+      const v = voisinsDe(trou);
+      const p = v[Math.floor(Math.random() * v.length)];
+      [cases[trou], cases[p]] = [cases[p], cases[trou]];
+      trou = p;
     }
   }
-  fabriquer();
 
-  /* ---------- modales ---------- */
-  const modaleFinal = $("#modaleFinal"), modaleSecret = $("#modaleSecret");
-  function fermer(m){
-    m.classList.remove("ouvert");
-    document.body.classList.remove("verrou");
+  function dessiner(){
+    grille.innerHTML = "";
+    cases.forEach((piece, pos) => {
+      const c = document.createElement("button");
+      c.type = "button";
+      c.className = "case" + (piece === TOTAL - 1 ? " trou" : "");
+      if(piece === TOTAL - 1){
+        c.setAttribute("aria-hidden", "true");
+        c.tabIndex = -1;
+        grille.appendChild(c);
+        return;
+      }
+      const col = piece % N, row = Math.floor(piece / N);
+      const pas = 100 / (N - 1);
+      c.style.backgroundImage = 'url("' + IMAGE + '")';
+      c.style.backgroundPosition = (col * pas) + "% " + (row * pas) + "%";
+      c.dataset.pos = pos;
+      c.setAttribute("aria-label", "Pièce " + (piece + 1) + " sur 9");
+      const tag = document.createElement("span");
+      tag.className = "marque-piece";
+      tag.textContent = String(piece + 1).padStart(2, "0");
+      c.appendChild(tag);
+      c.addEventListener("click", () => tenter(pos));
+      grille.appendChild(c);
+    });
   }
-  $("#fermerFinal").addEventListener("click", () => fermer(modaleFinal));
-  modaleFinal.addEventListener("click", e => { if(e.target === modaleFinal) fermer(modaleFinal); });
-  $("#fermerSecret").addEventListener("click", () => fermer(modaleSecret));
-  modaleSecret.addEventListener("click", e => { if(e.target === modaleSecret) fermer(modaleSecret); });
-  addEventListener("keydown", e => { if(e.key === "Escape"){ [modaleFinal, modaleSecret, modalePhoto].forEach(fermer); } });
 
-  /* ---------- mot secret : "chaton" ---------- */
-  const motSecret = "chaton";
-  let tampon = "";
+  function tenter(pos){
+    if(gagne) return;
+    if(!voisinsDe(trou).includes(pos)) return;
+    if(!minuterie) minuterie = setInterval(() => { chrono++; elChrono.textContent = formater(chrono); }, 1000);
+    [cases[trou], cases[pos]] = [cases[pos], cases[trou]];
+    trou = pos;
+    coups++;
+    elCoups.textContent = coups;
+    const r = grille.getBoundingClientRect();
+    tampon(r.left + (pos % N + .5) * (r.width / N), r.top + (Math.floor(pos / N) + .5) * (r.height / N));
+    dessiner();
+    if(resolu()) finir();
+  }
+
+  function formater(t){
+    return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+  }
+
+  function finir(){
+    gagne = true;
+    clearInterval(minuterie); minuterie = null;
+    bandeauFin.classList.add("visible");
+    if(!record || coups < record){
+      record = coups;
+      try { localStorage.setItem("mariam-puzzle-record", String(record)); } catch(e){}
+      elRecord.textContent = record + " coups";
+    }
+    tomber(40);
+    setTimeout(() => {
+      $("#dialogueFin").classList.add("ouvert");
+      document.body.classList.add("fige");
+    }, 950);
+  }
+
+  $("#melanger").addEventListener("click", () => {
+    fabriquer();
+    dessiner();
+    coups = 0; chrono = 0; gagne = false;
+    clearInterval(minuterie); minuterie = null;
+    elCoups.textContent = "0";
+    elChrono.textContent = "00:00";
+    bandeauFin.classList.remove("visible");
+  });
+
+  fabriquer();
+  dessiner();
+
+  /* ------- dialogues ------- */
+  function fermer(sel){
+    $(sel).classList.remove("ouvert");
+    document.body.classList.remove("fige");
+  }
+  $("#fermerFin").addEventListener("click", () => fermer("#dialogueFin"));
+  $("#dialogueFin").addEventListener("click", e => { if(e.target === $("#dialogueFin")) fermer("#dialogueFin"); });
+  $("#fermerSecret").addEventListener("click", () => fermer("#dialogueSecret"));
+  $("#dialogueSecret").addEventListener("click", e => { if(e.target === $("#dialogueSecret")) fermer("#dialogueSecret"); });
+  addEventListener("keydown", e => {
+    if(e.key === "Escape"){ fermer("#dialogueFin"); fermer("#dialogueSecret"); fermer("#lumiere"); }
+  });
+
+  /* ------- mot hors-champ : "chaton" ------- */
+  let tamponMot = "";
   addEventListener("keydown", e => {
     if(e.key.length !== 1) return;
-    tampon = (tampon + e.key.toLowerCase()).slice(-motSecret.length);
-    if(tampon === motSecret){
-      modaleSecret.classList.add("ouvert");
-      document.body.classList.add("verrou");
-      semer(26);
+    tamponMot = (tamponMot + e.key.toLowerCase()).slice(-6);
+    if(tamponMot === "chaton"){
+      $("#dialogueSecret").classList.add("ouvert");
+      document.body.classList.add("fige");
+      tomber(28);
     }
   });
 
-  /* ---------- traînée ---------- */
+  /* ------- poussiere ------- */
   if(!reduit && matchMedia("(hover:hover)").matches){
     let dernier = 0;
     addEventListener("mousemove", e => {
       const n = Date.now();
-      if(n - dernier < 95) return;
+      if(n - dernier < 110) return;
       dernier = n;
-      const c = document.createElement("div");
-      c.className = "echo";
-      c.textContent = Math.random() > .5 ? "♥" : "✦";
-      c.style.left = (e.clientX - 6) + "px";
-      c.style.top = (e.clientY - 6) + "px";
-      c.style.fontSize = (10 + Math.random() * 6) + "px";
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 1100);
+      tampon(e.clientX - 7, e.clientY - 7);
     });
   }
 </script>
